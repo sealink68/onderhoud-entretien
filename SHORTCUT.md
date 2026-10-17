@@ -1,10 +1,10 @@
 # Opdracht „Onderhoud_Entretien” maken (iOS-app Opdrachten)
 
 > **Sneller: installeer de kant-en-klare opdracht** in plaats van ze zelf te bouwen:
-> https://www.icloud.com/shortcuts/fc2b0b7ba6cf4bf6a3bc11dc0683d29e
+> https://www.icloud.com/shortcuts/a70777546d224795bd690d29c15c8788
 > (ook via de knop **1. Installeer de opdracht** in de app, en later via **⚙ Instellingen technieker**).
 > Tik op *Voeg opdracht toe*. Controleer daarna in de acties *Maak map aan* en *Bewaar bestand* of de locatie
-> (*Op mijn iPhone* / *iCloud Drive*) juist staat op jouw toestel. De rest van deze handleiding is alleen nodig om ze zelf te bouwen.
+> op **iCloud Drive** staat (aanbevolen: werkt op iPhone én iPad). Kies ze anders één keer opnieuw. De rest van deze handleiding is alleen nodig om ze zelf te bouwen.
 
 De web-app start deze opdracht op twee manieren:
 
@@ -36,7 +36,7 @@ Bij `setup` maakt de opdracht alleen de mappen aan. Bij een WO-nummer downloadt 
    - Voorwaarde: **is**.
    - Tekst: `setup` (kleine letters).
 5. Sleep tussen **Als** en **Anders** de actie **Maak map aan** (*Create Folder*).
-   - Tik op de locatie en kies **iCloud Drive** (of **Op mijn iPhone** als je niet met iCloud werkt).
+   - Tik op de locatie en kies **iCloud Drive** (de hoofdmap). **Aanbevolen**: zo werkt de opdracht op iPhone én iPad. Gebruik *Op mijn iPhone* liever niet: die locatie is aan één toestel gebonden en bestaat niet op een iPad.
    - Pad: `Rapport`
 6. Voeg daaronder nog een **Maak map aan** toe, zelfde locatie, pad: `Rapport/Onderhoud_Entretien`.
 7. Optioneel: **Toon melding** (*Show Notification*) met de tekst `Mappen klaar / Dossiers prêts`.
@@ -55,7 +55,7 @@ Bij `setup` maakt de opdracht alleen de mappen aan. Bij een WO-nummer downloadt 
     - Bestand: het resultaat van stap 11 (**Bestand met naam** / *Renamed Item*).
     - Tik op **Toon meer** (pijltje).
     - **Vraag waar te bewaren** (*Ask Where to Save*): **UIT**.
-    - Bestemming/map: tik op de map (standaard *Opdrachten*) en kies dezelfde locatie als in stap 5 (**iCloud Drive** of **Op mijn iPhone**).
+    - Bestemming/map: tik op de map (standaard *Opdrachten*) en kies dezelfde locatie als in stap 5: **iCloud Drive** (de hoofdmap, niet *Op mijn iPhone*).
     - **Subpad** (*Subpath*): `Rapport/Onderhoud_Entretien/`
     - **Vervang bestaande bestanden** / **Overschrijf als bestand bestaat** (*Overwrite If File Exists*): **AAN**.
 13. Optioneel: **Toon melding** met `OC_[Opdrachtinvoer].pdf bewaard`.
@@ -84,6 +84,8 @@ Einde als
 3. Verstuur in de app een eindverslag. De opdracht start en `OC_WO-….pdf` verschijnt in de map. Opnieuw versturen overschrijft het bestand.
 
 ## Opmerkingen
+
+- Alle drie de locaties (2× *Maak map aan* en *Bewaar bestand*) moeten **iCloud Drive** zijn. Op iPad bestaat *Op mijn iPhone* niet; een actie die daar nog naar wijst, mislukt.
 
 - De eerste keer vraagt iOS toestemming: „Onderhoud_Entretien wil verbinding maken met onderhoud-api.sealink68.workers.dev” en „… wil toegang tot bestanden”. Kies **Sta altijd toe**.
 - Bestaat de map al, dan kan **Maak map aan** een melding geven bij een nieuwe *setup*. Dat is onschuldig, want de tak stopt daarna toch.

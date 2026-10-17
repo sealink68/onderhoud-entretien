@@ -259,7 +259,7 @@
   function loadFinal() {
     var S = OE.S, wo = S.wo; mem.final = "loading"; mem.finalErr = ""; mem.pdf = null; mem.pdfBlob = null; mem.finalMsg = "";
     OE.api.getWO(wo).then(function (w) {
-      mem.final = w; mem.summary = OE.buildSummary(w.dossiers);
+      mem.final = w; mem.summary = OE.buildSummary(w.dossiers, w.wo);
       // Pre-build the PDF while the user reviews, so the send tap only has to upload it.
       if (w.dossiers.length) mem.pdf = buildFinalPdf(w);
     }, function (e) { mem.final = null; mem.finalErr = String(e && e.message || e); })

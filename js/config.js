@@ -10,7 +10,7 @@ OE.CFG = {
   MYMEMORY_DE: "sealink@hotmail.com",
   GO: "https://go.servicemax.io",
   SHORTCUT: "Onderhoud_Entretien",
-  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/fc2b0b7ba6cf4bf6a3bc11dc0683d29e", // iCloud link to install the Shortcut
+  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/a70777546d224795bd690d29c15c8788", // iCloud link to install the Shortcut
   PHOTO_MAX: 1280, PHOTO_Q: 0.7,
   WO_PREFIX: "WO-",
   SEP: "────────────────────",
@@ -59,9 +59,11 @@ OE.REVISIT = { nl: "Revisit voor herstelling is aangevraagd.", fr: "Un revisit p
 /* Short clipboard summary (Eindverslag WO). */
 OE.SUMMARY = {
   nl: { ok: "Bij onderstaande toestellen werd een succesvol onderhoud uitgevoerd, waar geen mechanische- of electronische storingen werden vastgesteld en ook geen onderdelen vervangen werden.",
-        rem: "Bij bovenstaande toestellen werden opmerkingen genoteerd en/of onderdelen vervangen. Alle details staan in het uitgebreide onderhoudsverslag (PDF), dat op aanvraag kan worden toegestuurd." },
+        rem: "Bij bovenstaande toestellen werden opmerkingen genoteerd en/of onderdelen vervangen. Alle details staan in het uitgebreide onderhoudsverslag (PDF), dat op aanvraag kan worden toegestuurd.",
+        link: "Volledig verslag downloaden (30 dagen geldig): {url}" },
   fr: { ok: "Pour les appareils ci-dessous, un entretien a été effectué avec succès : aucune panne mécanique ou électronique n’a été constatée et aucune pièce n’a été remplacée.",
-        rem: "Pour les appareils ci-dessus, des remarques ont été notées et/ou des pièces ont été remplacées. Tous les détails figurent dans le rapport d’entretien détaillé (PDF), disponible sur demande." }
+        rem: "Pour les appareils ci-dessus, des remarques ont été notées et/ou des pièces ont été remplacées. Tous les détails figurent dans le rapport d’entretien détaillé (PDF), disponible sur demande.",
+        link: "Télécharger le rapport complet (valable 30 jours) : {url}" }
 };
 
 OE.DISC = "Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier";
