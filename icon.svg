@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Onderhoud_Entretien">
+  <rect width="512" height="512" fill="#8A9E9B"/>
+  <rect x="104" y="156" width="256" height="276" rx="40" fill="#FFFFFF"/>
+  <rect x="164" y="100" width="136" height="88" rx="24" fill="#FFFFFF"/>
+  <rect x="200" y="122" width="64" height="38" rx="12" fill="#8A9E9B"/>
+  <path d="M146 247 l16 16 l28 -30" fill="none" stroke="#8A9E9B" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="210" y="234" width="108" height="26" rx="13" fill="#8A9E9B"/>
+  <path d="M146 312 l16 16 l28 -30" fill="none" stroke="#8A9E9B" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="210" y="300" width="80" height="26" rx="13" fill="#8A9E9B"/>
+  <g transform="rotate(45 360 360)">
+    <rect x="337" y="300" width="46" height="170" rx="23" fill="#FFFFFF" stroke="#8A9E9B" stroke-width="14"/>
+    <path d="M360 214 a62 62 0 1 1 -0.1 0 z" fill="#FFFFFF" stroke="#8A9E9B" stroke-width="14"/>
+    <rect x="340" y="196" width="40" height="70" rx="8" fill="#8A9E9B"/>
+  </g>
+</svg>

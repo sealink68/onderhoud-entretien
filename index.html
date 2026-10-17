@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Onderhoud">
+<meta name="theme-color" content="#4f46e5">
+<title>Onderhoud_Entretien</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+<header><h1 id="title">Onderhoud</h1><div class="seg" id="seg"><button data-l="nl">NL</button><button data-l="fr">FR</button></div></header>
+<div id="tip" class="tip" hidden><p id="tiptext"></p><button type="button" id="tipx" aria-label="Sluiten">×</button></div>
+<div id="top"></div>
+<div class="card" id="card"></div>
+</div>
+<div id="modal" class="modal" hidden></div>
+<!-- Classic scripts (no build step, works on GitHub Pages and file://). Order matters. -->
+<script src="js/vendor/jspdf.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/api.js"></script>
+<script src="js/translate.js"></script>
+<script src="js/photos.js"></script>
+<script src="js/report.js"></script>
+<script src="js/summary.js"></script>
+<script src="js/pdf.js"></script>
+<script src="js/platform.js"></script>
+<script src="js/ui/common.js"></script>
+<script src="js/ui/screens.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
