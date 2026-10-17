@@ -60,10 +60,12 @@ OE.REVISIT = { nl: "Revisit voor herstelling is aangevraagd.", fr: "Un revisit p
 OE.SUMMARY = {
   nl: { ok: "Bij onderstaande toestellen werd een succesvol onderhoud uitgevoerd, waar geen mechanische- of electronische storingen werden vastgesteld en ook geen onderdelen vervangen werden.",
         rem: "Bij bovenstaande toestellen werden opmerkingen genoteerd en/of onderdelen vervangen. Alle details staan in het uitgebreide onderhoudsverslag (PDF), dat op aanvraag kan worden toegestuurd.",
-        link: "Volledig verslag downloaden (30 dagen geldig): {url}" },
+        link: "Volledig verslag downloaden (30 dagen geldig): {url}",
+        signer: "Ondertekenaar: {s}" },
   fr: { ok: "Pour les appareils ci-dessous, un entretien a été effectué avec succès : aucune panne mécanique ou électronique n’a été constatée et aucune pièce n’a été remplacée.",
         rem: "Pour les appareils ci-dessus, des remarques ont été notées et/ou des pièces ont été remplacées. Tous les détails figurent dans le rapport d’entretien détaillé (PDF), disponible sur demande.",
-        link: "Télécharger le rapport complet (valable 30 jours) : {url}" }
+        link: "Télécharger le rapport complet (valable 30 jours) : {url}",
+        signer: "Signataire : {s}" }
 };
 
 OE.DISC = "Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier";
@@ -102,7 +104,7 @@ OE.T = {
     runShortcut: "▶ Opdracht opnieuw starten", pdfDl: "⬇ PDF downloaden / delen", copyAgain: "Samenvatting opnieuw kopiëren",
     allOk: "Alles juist", remarks: "Opmerkingen", tech: "Technieker", extra: "Extra info", empty: "(leeg)",
     single: "1 toestel", multi: "Meerdere toestellen", editing: "Je bewerkt een bestaand dossier.",
-    photoErr: "Foto kon niet verwerkt worden.", obxOne: "1 dossier wacht op verzending", obxMany: "{n} dossiers wachten op verzending", obxRetry: "Opnieuw", obxOk: "Verzonden ✓", sentWait: "Wacht op verzending… (gaat automatisch verder)", sentDone: "Verzonden naar centraal ✓", finalOutbox: "Let op: op dit toestel wachten nog {n} dossier(s) op verzending. Wacht tot ze verzonden zijn (internet nodig) voor je het eindverslag verstuurt.", storeFull: "Opslag vol – dossier kon niet bewaard worden. Verwijder foto’s en probeer opnieuw.", revisitOnce: "(Komt maar één keer in het verslag.)", sentOver: "Bestaand dossier overschreven.", prevNote: "Controleer en verstuur naar centraal.", dossiersIn: "Dossiers in {w}"
+    signerH: "Verantwoordelijke ondertekenaar", signerPh: "Naam van de klant/verantwoordelijke ter plaatse", signerNeed: "Vul de naam van de ondertekenaar in.", ok: "OK", photoErr: "Foto kon niet verwerkt worden.", obxOne: "1 dossier wacht op verzending", obxMany: "{n} dossiers wachten op verzending", obxRetry: "Opnieuw", obxOk: "Verzonden ✓", sentWait: "Wacht op verzending… (gaat automatisch verder)", sentDone: "Verzonden naar centraal ✓", finalOutbox: "Let op: op dit toestel wachten nog {n} dossier(s) op verzending. Wacht tot ze verzonden zijn (internet nodig) voor je het eindverslag verstuurt.", storeFull: "Opslag vol – dossier kon niet bewaard worden. Verwijder foto’s en probeer opnieuw.", revisitOnce: "(Komt maar één keer in het verslag.)", sentOver: "Bestaand dossier overschreven.", prevNote: "Controleer en verstuur naar centraal.", dossiersIn: "Dossiers in {w}"
   },
   fr: {
     title: "Entretien", back: "Retour", next: "Suivant", yes: "Oui", no: "Non", cancel: "Annuler",
@@ -136,14 +138,14 @@ OE.T = {
     runShortcut: "▶ Relancer le raccourci", pdfDl: "⬇ Télécharger / partager le PDF", copyAgain: "Copier à nouveau le résumé",
     allOk: "Tout correct", remarks: "Remarques", tech: "Technicien", extra: "Infos compl.", empty: "(vide)",
     single: "1 appareil", multi: "Plusieurs appareils", editing: "Vous modifiez un dossier existant.",
-    photoErr: "La photo n’a pas pu être traitée.", obxOne: "1 dossier en attente d’envoi", obxMany: "{n} dossiers en attente d’envoi", obxRetry: "Réessayer", obxOk: "Envoyé ✓", sentWait: "En attente d’envoi… (continue automatiquement)", sentDone: "Envoyé à la centrale ✓", finalOutbox: "Attention : {n} dossier(s) de cet appareil attendent encore l’envoi. Attendez qu’ils soient envoyés (internet requis) avant d’envoyer le rapport final.", storeFull: "Mémoire pleine – le dossier n’a pas pu être enregistré. Supprimez des photos et réessayez.", revisitOnce: "(N’apparaît qu’une seule fois dans le rapport.)", sentOver: "Dossier existant remplacé.", prevNote: "Vérifiez puis envoyez à la centrale.", dossiersIn: "Dossiers dans {w}"
+    signerH: "Signataire responsable", signerPh: "Nom du client/responsable sur place", signerNeed: "Veuillez saisir le nom du signataire.", ok: "OK", photoErr: "La photo n’a pas pu être traitée.", obxOne: "1 dossier en attente d’envoi", obxMany: "{n} dossiers en attente d’envoi", obxRetry: "Réessayer", obxOk: "Envoyé ✓", sentWait: "En attente d’envoi… (continue automatiquement)", sentDone: "Envoyé à la centrale ✓", finalOutbox: "Attention : {n} dossier(s) de cet appareil attendent encore l’envoi. Attendez qu’ils soient envoyés (internet requis) avant d’envoyer le rapport final.", storeFull: "Mémoire pleine – le dossier n’a pas pu être enregistré. Supprimez des photos et réessayez.", revisitOnce: "(N’apparaît qu’une seule fois dans le rapport.)", sentOver: "Dossier existant remplacé.", prevNote: "Vérifiez puis envoyez à la centrale.", dossiersIn: "Dossiers dans {w}"
   }
 };
 
 /* PDF texts (always bilingual NL / FR). */
 OE.PDFT = {
   title: "Onderhoudsverslag / Rapport d’entretien",
-  wo: "Werkorder / Ordre de travail", date: "Datum / Date", techs: "Techniekers / Techniciens",
+  wo: "Werkorder / Ordre de travail", signer: "Ondertekenaar / Signataire", date: "Datum / Date", techs: "Techniekers / Techniciens",
   dossier: "Dossier", tech: "Technieker / Technicien", sent: "Verstuurd / Envoyé",
   mode: { single: "1 toestel / 1 appareil", multi: "Meerdere toestellen / Plusieurs appareils" },
   yes: "Juist / Correct", no: "Niet juist / Incorrect",

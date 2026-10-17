@@ -1,7 +1,7 @@
 /* summary.js – the short clipboard summary for "Eindverslag WO" (NL block, then FR block). */
 "use strict";
 (function (OE) {
-  OE.buildSummary = function (dossiers, wo) {
+  OE.buildSummary = function (dossiers, wo, signer) {
     // PDF link (always shown); the PDF is uploaded in the same "Verstuur" tap right after copying.
     var url = wo ? OE.CFG.API + "/wo/" + encodeURIComponent(wo) + "/pdf" : "";
     var ok = dossiers.filter(function (d) { return !OE.hasRemarks(d); }).map(function (d) { return d.dossier; });
@@ -12,6 +12,7 @@
       if (ok.length && rem.length) parts.push(OE.CFG.UNDERSCORES);
       if (rem.length) parts.push(rem.join(" | ") + "\n" + OE.SUMMARY[L].rem);
       if (url) parts.push(OE.fmt(OE.SUMMARY[L].link, { url: url }));
+      if (signer) parts.push(OE.fmt(OE.SUMMARY[L].signer, { s: signer }));
       return parts.join("\n");
     }
     if (!dossiers.length) return "";

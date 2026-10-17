@@ -306,7 +306,7 @@
   function loadFinal() {
     var S = OE.S, wo = S.wo; mem.final = "loading"; mem.finalErr = ""; mem.pdf = null; mem.pdfBlob = null; mem.finalMsg = "";
     OE.api.getWO(wo).then(function (w) {
-      mem.final = w; mem.summary = OE.buildSummary(w.dossiers, w.wo);
+      mem.final = w; mem.summary = OE.buildSummary(w.dossiers, w.wo, w.signer || "");
       // Pre-build the PDF while the user reviews, so the send tap only has to upload it.
       if (w.dossiers.length) mem.pdf = buildFinalPdf(w);
     }, function (e) { mem.final = null; mem.finalErr = String(e && e.message || e); })
@@ -325,7 +325,7 @@
     }, Promise.resolve());
   }
   function buildFinalPdf(w) {
-    return fillTr(w).then(function () { return OE.buildPdf(w.wo, w.dossiers); }).then(function (b) { mem.pdfBlob = b; return b; });
+    return fillTr(w).then(function () { return OE.buildPdf(w.wo, w.dossiers, null, w.signer || ""); }).then(function (b) { mem.pdfBlob = b; return b; });
   }
   OE.buildFinalPdf = buildFinalPdf;
   SC.final = function () {
@@ -349,7 +349,18 @@
     OE.bind("nd", function () { var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false; OE.go("wo"); });
     OE.bind("cl", OE.closeApp);
     [].forEach.call($("card").querySelectorAll("[data-edit]"), function (b) { b.onclick = function () { editDossier(b.dataset.edit); }; });
-    OE.bind("snd", function () { var n = OE.outbox.pending(S.wo).length; OE.confirmModal((n ? OE.fmt(x.finalOutbox, { n: n }) + "\n\n" : "") + x.finalConfirm, sendFinal); });
+    // send -> signer popup (mandatory, prefilled) -> confirm popup -> generate (copy happens in the confirm tap)
+    OE.bind("snd", function () {
+      OE.promptModal(x.signerH, x.signerPh, (mem.final && mem.final.signer) || "", x.signerNeed, function (signer) {
+        var w = mem.final;
+        if (w.signer !== signer) { w.signer = signer; mem.pdf = buildFinalPdf(w); } // rebuild with the signer
+        else if (!mem.pdf) mem.pdf = buildFinalPdf(w);
+        mem.summary = OE.buildSummary(w.dossiers, w.wo, signer);
+        mem.signerSave = OE.api.setSigner(w.wo, signer);
+        var n = OE.outbox.pending(S.wo).length;
+        OE.confirmModal((n ? OE.fmt(x.finalOutbox, { n: n }) + "\n\n" : "") + x.finalConfirm, sendFinal);
+      });
+    });
     bindFinalMsg();
   };
   function bindFinalMsg() {
@@ -364,7 +375,7 @@
     $("snd").disabled = true;
     $("msg").innerHTML = '<div class="load"><div class="spin"></div>' + x.pdfBusy + "</div>";
     // A) PDF -> upload -> Shortcut
-    (mem.pdf || (mem.pdf = buildFinalPdf(w))).then(function (blob) { return OE.api.putPdf(wo, blob); })
+    Promise.all([mem.pdf || (mem.pdf = buildFinalPdf(w)), mem.signerSave]).then(function (r) { return OE.api.putPdf(wo, r[0]); })
       .then(function () {
         return copied.then(function (ok) {
           mem.finalMsg = '<div class="okmsg" id="pdfok">✓ ' + esc(x.pdfOk) + "</div>" + (ok ? "" : '<div class="err">' + esc(x.copyFail) + "</div>") +

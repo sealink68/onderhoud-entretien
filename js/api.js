@@ -26,6 +26,7 @@
     putDossier: function (wo, dn, d) { return req("PUT", "/wo/" + E(wo) + "/dossier/" + E(dn), JSON.stringify(d)); },
     putPhoto: function (wo, name, blob) { return req("PUT", "/wo/" + E(wo) + "/photo/" + E(name), blob, "image/jpeg", 60000); },
     photoUrl: function (wo, name) { return base() + "/wo/" + E(wo) + "/photo/" + E(name); },
+    setSigner: function (wo, signer) { return req("PUT", "/wo/" + E(wo) + "/signer", JSON.stringify({ signer: signer })); },
     putPdf: function (wo, blob) { return req("PUT", "/wo/" + E(wo) + "/pdf", blob, "application/pdf", 120000); },
     pdfUrl: function (wo) { return base() + "/wo/" + E(wo) + "/pdf"; }
   };

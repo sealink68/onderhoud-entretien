@@ -9,7 +9,7 @@
   }
   var W = 210, H = 297, M = 18, CW = W - 2 * M, TOP = 30, BOT = H - 18;
   var C = { tx: [15, 23, 42], mu: [100, 116, 139], li: [148, 163, 184], tr: [67, 56, 202], ok: [6, 95, 70], nok: [153, 27, 27] };
-  OE.buildPdf = function (wo, dossiers, onProgress) {
+  OE.buildPdf = function (wo, dossiers, onProgress, signer) {
     var J = window.jspdf.jsPDF, doc = new J({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
     var P = OE.PDFT, y = TOP;
     function font(st, sz, col) { doc.setFont("helvetica", st || "normal"); doc.setFontSize(sz || 10); var c = col || C.tx; doc.setTextColor(c[0], c[1], c[2]); }
@@ -45,6 +45,7 @@
       var info = [[P.wo, wo], [P.date, ds], ["Dossiers", String(dossiers.length) + "  (" + dossiers.map(function (d) { return d.dossier; }).join(" | ") + ")"]];
       var techs = []; dossiers.forEach(function (d) { var s = OE.techLabel(d.tech); if (techs.indexOf(s) < 0) techs.push(s); });
       info.push([P.techs, techs.join(", ")]);
+      if (signer) info.push([P.signer, signer]);
       info.forEach(function (r) { var p = para(r[1], M + 48, CW - 48, "normal", 10); font("bold", 10, C.mu); doc.text(clean(r[0]), M, y + lh(10) * 0.75); draw(p); y += 1; });
       y += 4;
       dossiers.forEach(function (d, di) {

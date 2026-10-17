@@ -31,6 +31,23 @@
   OE.progress = function (a, b, label) {
     OE.$("top").innerHTML = '<div class="prog"><span>' + OE.esc(label) + "</span><span>" + Math.round(a / b * 100) + '%</span></div><div class="bar"><i style="width:' + (a / b * 100) + '%"></i></div>';
   };
+  /* Mandatory text popup (e.g. signer). onOk(value) runs inside the tap. */
+  OE.promptModal = function (title, hint, value, needMsg, onOk) {
+    var m = OE.$("modal"), x = OE.t();
+    m.innerHTML = '<div class="card"><p id="mtext">' + OE.esc(title) + '</p><textarea id="minp" rows="1" autocapitalize="words" autocomplete="off"></textarea><div id="merr"></div>' +
+      '<div class="btns"><button class="btn sec" id="mno">' + x.cancel + '</button><button class="btn pri" id="mok">' + x.ok + "</button></div></div>";
+    m.hidden = false;
+    var i = OE.$("minp"); i.placeholder = hint; i.value = value || ""; OE.fit(i);
+    i.oninput = function () { i.value = i.value.replace(/\n/g, ""); OE.fit(i); };
+    i.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); OE.$("mok").click(); } };
+    setTimeout(function () { try { i.focus(); } catch (e) {} }, 50);
+    OE.$("mno").onclick = function () { m.hidden = true; };
+    OE.$("mok").onclick = function () {
+      var v = i.value.replace(/\s+/g, " ").trim();
+      if (!v) { OE.$("merr").innerHTML = '<div class="err">⚠️ ' + OE.esc(needMsg) + "</div>"; return; }
+      m.hidden = true; onOk(v);
+    };
+  };
   /* Confirm popup; onYes runs inside the user's tap (keeps clipboard/user-gesture rights). */
   OE.confirmModal = function (text, onYes) {
     var m = OE.$("modal"), x = OE.t();
