@@ -86,21 +86,26 @@
     var won = $("won"), dn = $("dn");
     won.value = S.woNewTxt || ""; dn.value = S.dossier || ""; dn.placeholder = x.dossierPh;
     won.oninput = function () {
-      won.value = won.value.replace(/^\s*WO-?/i, "").replace(/\s+/g, "");
+      won.value = won.value.replace(/^\s*WO-?/i, "");
       S.woNewTxt = won.value; S.woIsNew = !!won.value; if (S.woIsNew) S.wo = ""; OE.save(); drawWOList(); finalBtn();
     };
-    dn.oninput = function () { dn.value = dn.value.replace(/\s+/g, ""); S.dossier = dn.value; OE.save(); OE.fit(dn); };
+    dn.oninput = function () { S.dossier = dn.value; OE.save(); OE.fit(dn); };
+    // spaces become "_" when leaving the field (and on Volgende); a pasted trailing newline is trimmed
+    won.onblur = function () { won.value = OE.normId(won.value).replace(/^WO-/i, ""); S.woNewTxt = won.value; S.woIsNew = !!won.value; OE.save(); };
+    dn.onblur = function () { dn.value = OE.normId(dn.value); S.dossier = dn.value; OE.save(); OE.fit(dn); };
     dn.onkeydown = function (e) { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); next(); } };
     drawWOList(); if (!mem.woList) loadWOs(); finalBtn();
     OE.bind("bk", function () { OE.go("mode", -1); });
     OE.bind("fin", function () { mem.final = null; OE.go("final"); });
     OE.bind("nx", next);
     function next() {
+      S.woNewTxt = OE.normId(S.woNewTxt).replace(/^WO-/i, ""); won.value = S.woNewTxt;
+      S.dossier = OE.normId(S.dossier); dn.value = S.dossier;
       var wo = S.woIsNew ? OE.CFG.WO_PREFIX + (S.woNewTxt || "") : S.wo;
       if (!wo || wo === OE.CFG.WO_PREFIX) return OE.err(x.needWo);
-      if (!/^WO-[A-Za-z0-9._-]{1,40}$/.test(wo)) return OE.err(x.woInvalid);
+      if (wo.length > 100) return OE.err(x.woInvalid);
       if (!S.dossier.trim()) return OE.err(x.needDossier);
-      if (!/^[A-Za-z0-9._-]{1,40}$/.test(S.dossier)) return OE.err(x.dnInvalid);
+      if (S.dossier.length > 100) return OE.err(x.dnInvalid);
       $("nx").disabled = true;
       var pr = S.woIsNew ? OE.api.createWO(wo) : Promise.resolve();
       pr.then(function () {
@@ -304,7 +309,7 @@
   };
   function bindFinalMsg() {
     OE.bind("rsc", function () { OE.copyText(mem.summary); OE.runShortcut(OE.S.wo); });
-    OE.bind("pdl", function () { if (mem.pdfBlob) OE.shareOrDownload(mem.pdfBlob, "OC_" + OE.S.wo + ".pdf"); });
+    OE.bind("pdl", function () { if (mem.pdfBlob) OE.shareOrDownload(mem.pdfBlob, OE.safeFile("OC_" + OE.S.wo + ".pdf")); });
     OE.bind("cpy", function () { OE.copyText(mem.summary); });
   }
   function sendFinal() {

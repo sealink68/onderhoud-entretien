@@ -19,7 +19,9 @@
     for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
     return new Blob([u], { type: "image/jpeg" });
   };
-  OE.photoName = function (wo, dn, n) { return (wo + "_" + dn + "_" + n + ".jpg").replace(/[^A-Za-z0-9._-]/g, "_"); };
+  // Only characters that break file names / paths are replaced; everything else (ü, (), ...) stays.
+  OE.safeFile = function (s) { return String(s).replace(/[\s\/\\:*?"<>|\u0000-\u001F\u007F]/g, "_"); };
+  OE.photoName = function (wo, dn, n) { return OE.safeFile(wo + "_" + dn + "_" + n + ".jpg"); };
   /* Upload every photo of the draft that is not on the server yet. */
   OE.uploadPending = function (S) {
     var list = [];
