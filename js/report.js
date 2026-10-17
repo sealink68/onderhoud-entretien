@@ -27,8 +27,10 @@
       return { n: i + 1, q: q[L], ok: a.ok, sub: sub, photos: a.ok ? [] : (a.photos || []) };
     });
   };
+  OE.techLabel = function (t) { return (t.first + " " + t.last).trim() + " (" + t.initials + ")"; };
+  /* One language block; the technician is NOT repeated here (shown once in dossierText's header). */
   OE.dossierBlock = function (d, L) {
-    var T = OE.T[L], out = [T.dossier + ": " + d.dossier + "  –  " + T.tech + ": " + d.tech.initials + " (" + d.tech.first + " " + d.tech.last + ")"];
+    var T = OE.T[L], out = [];
     OE.reportRows(d, L).forEach(function (r) {
       out.push(r.n + ". " + r.q + " – " + (r.ok ? T.yesT : T.noT).toUpperCase());
       r.sub.forEach(function (s) { out.push("   " + s.t); });
@@ -40,6 +42,7 @@
   };
   OE.dossierText = function (d) {
     var L = d.lang, O = OE.other(L);
-    return OE.dossierBlock(d, L) + "\n\n" + OE.CFG.SEP + "\n(" + OE.DISC + ")\n\n" + OE.dossierBlock(d, O);
+    return "Dossier " + d.dossier + "\n" + OE.PDFT.tech + ": " + OE.techLabel(d.tech) + "\n\n" +
+      OE.dossierBlock(d, L) + "\n\n" + OE.CFG.SEP + "\n(" + OE.DISC + ")\n\n" + OE.dossierBlock(d, O);
   };
 })(window.OE);

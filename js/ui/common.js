@@ -15,7 +15,7 @@
     OE.$("title").textContent = OE.T[L].title; document.title = OE.CFG.APP; document.documentElement.lang = L;
     [].forEach.call(document.querySelectorAll("#seg button"), function (b) { b.classList.toggle("on", b.dataset.l === S.lang); });
     OE.$("seg").style.visibility = S.lang ? "visible" : "hidden";
-    OE.updateTip();
+    OE.updateTip(); if (OE.outbox) OE.outbox.status();
   };
   OE.anim = function (dir) { var c = OE.$("card"); c.classList.remove("slide-in-r", "slide-in-l"); void c.offsetWidth; c.classList.add(dir < 0 ? "slide-in-l" : "slide-in-r"); };
   OE.render = function (dir) {

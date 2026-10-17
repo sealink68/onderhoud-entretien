@@ -4,7 +4,7 @@ Web-app (NL/FR) voor onderhoudsverslagen van dormakaba-deurtechniekers in Belgi�
 Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met dezelfde look & feel.
 
 **Live (na publicatie):** https://sealink68.github.io/onderhoud-entretien/
-**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/a70777546d224795bd690d29c15c8788 (ook via de knop *1. Installeer de opdracht* in de app). De opdracht bewaart in **iCloud Drive › Rapport › Onderhoud_Entretien**: aanbevolen, werkt op iPhone én iPad.
+**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/ae5ae596ed7d4671870b9b685ba90f43 (ook via de knop *1. Installeer de opdracht* in de app). De opdracht bewaart in **iCloud Drive › Rapport › Onderhoud_Entretien**: aanbevolen, werkt op iPhone én iPad. Na het bewaren opent de opdracht de app ServiceMax Go.
 **Backend:** Cloudflare Worker `onderhoud-api` → https://onderhoud-api.sealink68.workers.dev (bron in `../onderhoud-api/`)
 
 ## Verloop
@@ -15,6 +15,7 @@ Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met deze
 4. Werkorder: kies een bestaande WO (lijst van de worker) of maak een nieuwe aan (prefix `WO-` wordt afgedwongen). Vul daarna het dossiernummer in.
 5. Acht stellingen, elk standaard **Juist**. Kies je **Niet juist**, dan verschijnt de juiste invulling: een beschrijving, een vaste tekst of *revisit*. Bij stelling 1 is minstens één foto verplicht. Foto's worden verkleind tot ±1280 px (JPEG, kwaliteit 0.7) en krijgen de naam `<WO>_<dossier>_<n>.jpg`. De revisit-zin staat maar één keer per dossier in het verslag.
 6. Extra informatie (optioneel), daarna een voorbeeld met automatische vertaling. Vanuit het voorbeeld verstuur je het dossier naar centraal.
+6b. *Verstuur naar centraal* zet het dossier (met foto's) in een **outbox** op het toestel en opent meteen ServiceMax Go (in dezelfde tik). Het opladen loopt verder op de achtergrond en wordt automatisch opnieuw geprobeerd (bij opstarten, terugkeren naar de app, internet terug, elke 20 s) tot de server het bevestigt. Bovenaan staat dan “1 dossier wacht op verzending” of “Verzonden ✓”. Het eindverslag waarschuwt als er op dit toestel nog dossiers wachten.
 7. Drie keuzes: **Nieuw dossier**, **Eindverslag WO** of **Sluiten app**. *Sluiten app* zet de app terug op de startpagina en opent ServiceMax Go.
 8. **Eindverslag WO**: toont alle dossiers van alle techniekers. Elk dossier kun je bewerken en opnieuw versturen. Bij **Verstuur** volgt eerst een bevestiging, daarna:
    - wordt de korte samenvatting (NL + FR) naar het klembord gekopieerd;
@@ -35,6 +36,7 @@ js/storage.js           localStorage-status (instellingen + lopend dossier)
 js/api.js               calls naar de worker
 js/translate.js         vertaling (werkrapport-translate proxy, terugval op MyMemory)
 js/photos.js            verkleinen/benoemen/opladen van foto's
+js/outbox.js            persistente verzendwachtrij (outbox) + status
 js/report.js            dossier → rijen/tekst per taal (revisit één keer)
 js/summary.js           korte klembord-samenvatting
 js/pdf.js               tweetalige WO-PDF

@@ -91,3 +91,6 @@ h1#title{font-size:22px}
 .modal[hidden]{display:none}
 .modal .card{max-width:420px;width:100%}
 .modal p{font-size:18px;font-weight:700;line-height:1.35;margin:0 0 8px}
+.obx{margin:0 2px 10px;padding:8px 12px;border-radius:12px;font-size:13px;font-weight:700;background:rgba(255,255,255,.94);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.obx[hidden]{display:none}.obx.wait{color:#9a3412}.obx.ok{color:#065f46}
+.obx button{border:0;background:#fff7ed;color:#9a3412;font-weight:800;border-radius:8px;padding:6px 10px;cursor:pointer}

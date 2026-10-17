@@ -1,7 +1,7 @@
 # Opdracht „Onderhoud_Entretien” maken (iOS-app Opdrachten)
 
 > **Sneller: installeer de kant-en-klare opdracht** in plaats van ze zelf te bouwen:
-> https://www.icloud.com/shortcuts/a70777546d224795bd690d29c15c8788
+> https://www.icloud.com/shortcuts/ae5ae596ed7d4671870b9b685ba90f43
 > (ook via de knop **1. Installeer de opdracht** in de app, en later via **⚙ Instellingen technieker**).
 > Tik op *Voeg opdracht toe*. Controleer daarna in de acties *Maak map aan* en *Bewaar bestand* of de locatie
 > op **iCloud Drive** staat (aanbevolen: werkt op iPhone én iPad). Kies ze anders één keer opnieuw. De rest van deze handleiding is alleen nodig om ze zelf te bouwen.
@@ -59,6 +59,7 @@ Bij `setup` maakt de opdracht alleen de mappen aan. Bij een WO-nummer downloadt 
     - **Subpad** (*Subpath*): `Rapport/Onderhoud_Entretien/`
     - **Vervang bestaande bestanden** / **Overschrijf als bestand bestaat** (*Overwrite If File Exists*): **AAN**.
 13. Optioneel: **Toon melding** met `OC_[Opdrachtinvoer].pdf bewaard`.
+14. Als laatste actie van de tak *Anders* (na *Bewaar bestand*, vóór *Einde als*): **Open app** (*Open App*) → kies **Go** (ServiceMax Go). Zo kom je na het bewaren meteen terug in ServiceMax. Deze stap hoort **niet** in de tak *setup*. *(Alternatief: **Open URL's** met `https://go.servicemax.io`.)*
 
 De opdracht ziet er dan zo uit:
 
@@ -74,6 +75,8 @@ Anders
     Haal inhoud van URL op
     Stel naam in  Inhoud van URL  →  OC_[Opdrachtinvoer].pdf
     Bewaar bestand  (Vraag waar: uit · Subpad: Rapport/Onderhoud_Entretien/ · Overschrijven: aan)
+    Toon melding  OC_[Opdrachtinvoer].pdf bewaard
+    Open app  Go (ServiceMax)
 Einde als
 ```
 

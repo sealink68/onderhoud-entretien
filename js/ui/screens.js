@@ -239,10 +239,15 @@
     }
     draw(false);
     OE.bind("snd", function () {
-      var b = $("snd"); b.disabled = true; b.textContent = x.sending; OE.err("");
-      OE.uploadPending(S).then(function () { return OE.api.putDossier(S.wo, S.dossier, withTr(OE.draftDossier())); })
-        .then(function (r) { S.lastSent = { wo: S.wo, dossier: S.dossier, over: !!(r && r.overwritten) }; mem.final = null; OE.go("sent"); },
-          function (e) { b.disabled = false; b.textContent = x.sendCentral; OE.err(x.sendErr + " (" + (e && e.message || e) + ")"); });
+      // Queue in the persistent outbox, open ServiceMax Go inside this tap (iOS), upload in the background.
+      var d = withTr(OE.draftDossier()), photos = [];
+      S.answers.forEach(function (a) { a.photos.forEach(function (p) { if (!p.up && p.data) photos.push({ name: p.name, data: p.data, up: false }); }); });
+      try { OE.outbox.add(d, photos); } catch (e) { OE.err(x.storeFull); return; }
+      S.lastSent = { wo: S.wo, dossier: S.dossier, over: false, done: false };
+      S.answers.forEach(function (a) { a.photos.forEach(function (p) { if (p.data) { delete p.data; p.up = true; } }); }); // data now lives in the outbox
+      mem.final = null; S.screen = "sent"; OE.save(); OE.render(1);
+      OE.openGo();
+      OE.outbox.flush();
     });
   };
 
@@ -253,7 +258,8 @@
   };
   SC.sent = function () {
     var S = OE.S, x = OE.t(), ls = S.lastSent || { wo: S.wo, dossier: S.dossier };
-    $("card").innerHTML = '<div class="check">✓</div><h2 class="q center">' + x.sentH + '</h2><p class="center hint">' + esc(OE.fmt(x.sentP, { d: ls.dossier, w: ls.wo })) + (ls.over ? "<br>" + x.sentOver : "") + "</p>" +
+    $("card").innerHTML = '<div class="check">✓</div><h2 class="q center">' + x.sentH + '</h2><p class="center hint">' + esc(OE.fmt(x.sentP, { d: ls.dossier, w: ls.wo })) + "</p>" +
+      '<p class="center" id="sst">' + (OE.outbox.isPending(ls.wo, ls.dossier) ? '<span class="badge r">⏳ ' + x.sentWait + "</span>" : '<span class="badge g">' + x.sentDone + "</span>" + (ls.over ? '<br><small class="hint">' + x.sentOver + "</small>" : "")) + "</p>" +
       '<div class="stack"><button class="btn pri" id="nd">＋ ' + x.newDossier + '</button><button class="btn sec" id="fin">📄 ' + x.finalBtn + '</button><button class="btn sec" id="cl">' + x.closeApp + "</button></div>";
     OE.bind("nd", function () { var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false; OE.go("wo"); });
     OE.bind("cl", OE.closeApp);
@@ -293,6 +299,9 @@
     if (mem.finalErr) html += '<div class="err">' + esc(x.sendErr + " (" + mem.finalErr + ")") + '</div><button class="small" id="rl">' + x.woReload + "</button>";
     else if (!w || w === "loading") html += '<div class="load"><div class="spin"></div>' + x.finalLoading + "</div>";
     else if (!w.dossiers.length) html += '<p class="hint">' + x.finalNone + "</p>";
+    var nOut = OE.outbox.pending(S.wo).length;
+    if (nOut) html += '<div class="err" id="obxwarn">⚠️ ' + esc(OE.fmt(x.finalOutbox, { n: nOut })) + "</div>";
+    if (mem.finalErr || !w || w === "loading" || !w.dossiers.length) {}
     else html += '<p class="hint" style="margin:0">' + esc(OE.fmt(x.dossiersIn, { w: S.wo })) + ": " + w.dossiers.length + "</p>" +
       w.dossiers.map(function (d) { return dossierCard(d, S.lang, { all: false, edit: true }); }).join("");
     html += '<div id="err"></div><div id="msg">' + (mem.finalMsg || "") + "</div>" +
@@ -304,7 +313,7 @@
     OE.bind("nd", function () { var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false; OE.go("wo"); });
     OE.bind("cl", OE.closeApp);
     [].forEach.call($("card").querySelectorAll("[data-edit]"), function (b) { b.onclick = function () { editDossier(b.dataset.edit); }; });
-    OE.bind("snd", function () { OE.confirmModal(x.finalConfirm, sendFinal); });
+    OE.bind("snd", function () { var n = OE.outbox.pending(S.wo).length; OE.confirmModal((n ? OE.fmt(x.finalOutbox, { n: n }) + "\n\n" : "") + x.finalConfirm, sendFinal); });
     bindFinalMsg();
   };
   function bindFinalMsg() {

@@ -10,7 +10,7 @@ OE.CFG = {
   MYMEMORY_DE: "sealink@hotmail.com",
   GO: "https://go.servicemax.io",
   SHORTCUT: "Onderhoud_Entretien",
-  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/a70777546d224795bd690d29c15c8788", // iCloud link to install the Shortcut
+  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/ae5ae596ed7d4671870b9b685ba90f43", // iCloud link to install the Shortcut
   PHOTO_MAX: 1280, PHOTO_Q: 0.7,
   WO_PREFIX: "WO-",
   SEP: "────────────────────",
@@ -102,7 +102,7 @@ OE.T = {
     runShortcut: "▶ Opdracht opnieuw starten", pdfDl: "⬇ PDF downloaden / delen", copyAgain: "Samenvatting opnieuw kopiëren",
     allOk: "Alles juist", remarks: "Opmerkingen", tech: "Technieker", extra: "Extra info", empty: "(leeg)",
     single: "1 toestel", multi: "Meerdere toestellen", editing: "Je bewerkt een bestaand dossier.",
-    photoErr: "Foto kon niet verwerkt worden.", revisitOnce: "(Komt maar één keer in het verslag.)", sentOver: "Bestaand dossier overschreven.", prevNote: "Controleer en verstuur naar centraal.", dossiersIn: "Dossiers in {w}"
+    photoErr: "Foto kon niet verwerkt worden.", obxOne: "1 dossier wacht op verzending", obxMany: "{n} dossiers wachten op verzending", obxRetry: "Opnieuw", obxOk: "Verzonden ✓", sentWait: "Wacht op verzending… (gaat automatisch verder)", sentDone: "Verzonden naar centraal ✓", finalOutbox: "Let op: op dit toestel wachten nog {n} dossier(s) op verzending. Wacht tot ze verzonden zijn (internet nodig) voor je het eindverslag verstuurt.", storeFull: "Opslag vol – dossier kon niet bewaard worden. Verwijder foto’s en probeer opnieuw.", revisitOnce: "(Komt maar één keer in het verslag.)", sentOver: "Bestaand dossier overschreven.", prevNote: "Controleer en verstuur naar centraal.", dossiersIn: "Dossiers in {w}"
   },
   fr: {
     title: "Entretien", back: "Retour", next: "Suivant", yes: "Oui", no: "Non", cancel: "Annuler",
@@ -136,7 +136,7 @@ OE.T = {
     runShortcut: "▶ Relancer le raccourci", pdfDl: "⬇ Télécharger / partager le PDF", copyAgain: "Copier à nouveau le résumé",
     allOk: "Tout correct", remarks: "Remarques", tech: "Technicien", extra: "Infos compl.", empty: "(vide)",
     single: "Un appareil", multi: "Plusieurs appareils", editing: "Vous modifiez un dossier existant.",
-    photoErr: "La photo n’a pas pu être traitée.", revisitOnce: "(N’apparaît qu’une seule fois dans le rapport.)", sentOver: "Dossier existant remplacé.", prevNote: "Vérifiez puis envoyez à la centrale.", dossiersIn: "Dossiers dans {w}"
+    photoErr: "La photo n’a pas pu être traitée.", obxOne: "1 dossier en attente d’envoi", obxMany: "{n} dossiers en attente d’envoi", obxRetry: "Réessayer", obxOk: "Envoyé ✓", sentWait: "En attente d’envoi… (continue automatiquement)", sentDone: "Envoyé à la centrale ✓", finalOutbox: "Attention : {n} dossier(s) de cet appareil attendent encore l’envoi. Attendez qu’ils soient envoyés (internet requis) avant d’envoyer le rapport final.", storeFull: "Mémoire pleine – le dossier n’a pas pu être enregistré. Supprimez des photos et réessayez.", revisitOnce: "(N’apparaît qu’une seule fois dans le rapport.)", sentOver: "Dossier existant remplacé.", prevNote: "Vérifiez puis envoyez à la centrale.", dossiersIn: "Dossiers dans {w}"
   }
 };
 
