@@ -58,21 +58,57 @@
     OE.api.listWOs().then(function (l) { mem.woList = l; }, function () { mem.woList = []; mem.woErr = true; })
       .then(function () { if (OE.S.screen === "wo") drawWOList(); });
   }
+  /* Existing WO: search field + compact scrollable list (most recent first). After a tap the list collapses
+     into a "selected" chip; "Wijzig" opens the search again. */
+  function woMatches(w, q) {
+    if (!q) return true;
+    var n = w.wo.toLowerCase(), ql = q.toLowerCase();
+    if (n.indexOf(ql) >= 0) return true;
+    var qd = q.replace(/\D/g, "");
+    return qd.length > 0 && qd === q.replace(/\s/g, "") && n.replace(/\D/g, "").indexOf(qd) >= 0; // digits only
+  }
+  function woMeta(w, x) {
+    var p = [];
+    if (w.n != null) p.push(w.n === 1 ? "1 dossier" : w.n + " " + x.dossiers);
+    if (w.updated) p.push(new Date(w.updated).toLocaleDateString("nl-BE", { day: "2-digit", month: "2-digit" }));
+    return p.join(" · ");
+  }
+  function woAll() {
+    var S = OE.S, l = (mem.woList || []).slice().sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); });
+    if (S.wo && !S.woIsNew && !l.some(function (w) { return w.wo === S.wo; })) l.unshift({ wo: S.wo });
+    return l;
+  }
   function drawWOList() {
     var S = OE.S, x = OE.t(), el = $("wol"); if (!el) return;
     if (!mem.woList) { el.innerHTML = '<div class="load"><div class="spin"></div>' + x.woLoading + "</div>"; return; }
-    var l = mem.woList.slice();
-    if (S.wo && !S.woIsNew && !l.some(function (w) { return w.wo === S.wo; })) l.unshift({ wo: S.wo });
-    el.innerHTML = (mem.woErr ? '<div class="err">' + x.woErr + "</div>" : "") +
-      (l.length ? '<div class="opt">' + l.map(function (w) {
-        return '<button data-wo="' + esc(w.wo) + '" class="' + (w.wo === S.wo && !S.woIsNew ? "on" : "") + '">' + esc(w.wo) +
-          (w.n != null ? "<small>" + w.n + " " + x.dossiers + (w.updated ? " · " + new Date(w.updated).toLocaleDateString("nl-BE") : "") + "</small>" : "") + "</button>";
-      }).join("") + "</div>" : '<p class="hint">' + x.woNone + "</p>") +
-      '<button class="small" id="rl" style="margin:0">' + x.woReload + "</button>";
-    [].forEach.call(el.querySelectorAll("[data-wo]"), function (b) {
-      b.onclick = function () { S.wo = b.dataset.wo; S.woIsNew = false; S.woNewTxt = ""; $("won").value = ""; OE.save(); drawWOList(); finalBtn(); };
-    });
+    var err = mem.woErr ? '<div class="err">' + x.woErr + "</div>" : "";
+    if (S.wo && !S.woIsNew && !mem.woOpen) {
+      var cur = woAll().filter(function (w) { return w.wo === S.wo; })[0] || { wo: S.wo };
+      el.innerHTML = err + '<div class="wosel" id="wosel" data-wo="' + esc(S.wo) + '"><span>✓ <b>' + esc(S.wo) + "</b><small>" + esc(woMeta(cur, x)) + "</small></span>" +
+        '<button id="woch" type="button">' + x.woChange + "</button></div>";
+      OE.bind("woch", function () { mem.woOpen = true; drawWOList(); var q = $("woq"); if (q) q.focus(); });
+      return;
+    }
+    el.innerHTML = err + '<input id="woq" type="search" inputmode="search" autocomplete="off" autocapitalize="characters" placeholder="' + esc(x.woSearch) + '">' +
+      '<div class="wolist" id="wolist" role="listbox"></div><button class="small" id="rl" style="margin:0">' + x.woReload + "</button>";
+    var q = $("woq"); q.value = mem.woQ || "";
+    q.oninput = function () { mem.woQ = q.value; drawItems(); };
+    q.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); var f = $("wolist").querySelector("[data-wo]"); if (f) f.click(); } };
     OE.bind("rl", loadWOs);
+    drawItems();
+  }
+  function drawItems() {
+    var S = OE.S, x = OE.t(), box = $("wolist"); if (!box) return;
+    var all = woAll(), q = (mem.woQ || "").trim(), l = all.filter(function (w) { return woMatches(w, q); });
+    if (!all.length) { box.innerHTML = '<p class="hint wohint">' + x.woNoneYet + "</p>"; return; }
+    if (!l.length) { box.innerHTML = '<p class="hint wohint">' + x.woNotFound + "</p>"; return; }
+    box.innerHTML = l.slice(0, 300).map(function (w) {
+      var on = w.wo === S.wo && !S.woIsNew;
+      return '<button type="button" role="option" aria-selected="' + on + '" data-wo="' + esc(w.wo) + '" class="' + (on ? "on" : "") + '"><b>' + esc(w.wo) + "</b><small>" + esc(woMeta(w, x)) + "</small></button>";
+    }).join("");
+    [].forEach.call(box.querySelectorAll("[data-wo]"), function (b) {
+      b.onclick = function () { S.wo = b.dataset.wo; S.woIsNew = false; S.woNewTxt = ""; $("won").value = ""; mem.woOpen = false; mem.woQ = ""; OE.save(); drawWOList(); finalBtn(); };
+    });
   }
   function finalBtn() { var b = $("fin"); if (b) b.style.display = OE.S.wo && !OE.S.woIsNew ? "" : "none"; }
   SC.wo = function () {

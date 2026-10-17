@@ -94,3 +94,15 @@ h1#title{font-size:22px}
 .obx{margin:0 2px 10px;padding:8px 12px;border-radius:12px;font-size:13px;font-weight:700;background:rgba(255,255,255,.94);display:flex;align-items:center;gap:8px;justify-content:space-between}
 .obx[hidden]{display:none}.obx.wait{color:#9a3412}.obx.ok{color:#065f46}
 .obx button{border:0;background:#fff7ed;color:#9a3412;font-weight:800;border-radius:8px;padding:6px 10px;cursor:pointer}
+/* WO search + scroll list */
+#woq{padding:12px 14px;font-size:16px;border-radius:12px}
+.wolist{margin-top:6px;max-height:262px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border:2px solid #e2e8f0;border-radius:12px;background:#fff}
+.wolist button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;border:0;border-bottom:1px solid #eef2f7;background:#fff;padding:0 14px;min-height:48px;font-size:16px;text-align:left;cursor:pointer;color:var(--tx)}
+.wolist button:last-child{border-bottom:0}
+.wolist button small{color:var(--mu);font-size:12px;white-space:nowrap}
+.wolist button.on{background:#eef2ff;box-shadow:inset 4px 0 0 var(--a)}
+.wolist b{word-break:break-all}
+.wohint{margin:0;padding:14px;text-align:center}
+.wosel{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid var(--a);background:#eef2ff;border-radius:12px;padding:10px 12px}
+.wosel b{font-size:17px;word-break:break-all}.wosel small{display:block;color:var(--mu);font-size:12px;margin-left:20px}
+.wosel button{border:0;background:#fff;color:var(--a);font-weight:800;border-radius:10px;padding:10px 12px;min-height:44px;cursor:pointer}
