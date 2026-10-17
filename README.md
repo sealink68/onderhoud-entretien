@@ -4,12 +4,13 @@ Web-app (NL/FR) voor onderhoudsverslagen van dormakaba-deurtechniekers in Belgi�
 Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met dezelfde look & feel.
 
 **Live (na publicatie):** https://sealink68.github.io/onderhoud-entretien/
+**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/0493c34a69d643109089c46a2e428cd3 (ook via de knop *1. Installeer de opdracht* in de app)
 **Backend:** Cloudflare Worker `onderhoud-api` → https://onderhoud-api.sealink68.workers.dev (bron in `../onderhoud-api/`)
 
 ## Verloop
 
 1. Taalkeuze NL / FR.
-2. Eenmalig: voornaam + achternaam van de technieker. De initialen worden daaruit afgeleid. *Start* bewaart je naam en start de iOS-opdracht met `setup` om de mappen aan te maken. Aanpassen kan later via **⚙ Instellingen technieker**.
+2. Eenmalig: voornaam + achternaam van de technieker. Stap *1. Installeer de opdracht* opent de iCloud-link van de opdracht, stap *2. Start* bewaart de naam. De initialen worden daaruit afgeleid. *Start* bewaart je naam en start de iOS-opdracht met `setup` om de mappen aan te maken. Aanpassen kan later via **⚙ Instellingen technieker**.
 3. Keuze: 1 toestel of meerdere toestellen. Beide keuzes volgen hetzelfde verloop; de keuze wordt alleen bewaard.
 4. Werkorder: kies een bestaande WO (lijst van de worker) of maak een nieuwe aan (prefix `WO-` wordt afgedwongen). Vul daarna het dossiernummer in.
 5. Acht stellingen, elk standaard **Juist**. Kies je **Niet juist**, dan verschijnt de juiste invulling: een beschrijving, een vaste tekst of *revisit*. Bij stelling 1 is minstens één foto verplicht. Foto's worden verkleind tot ±1280 px (JPEG, kwaliteit 0.7) en krijgen de naam `<WO>_<dossier>_<n>.jpg`. De revisit-zin staat maar één keer per dossier in het verslag.

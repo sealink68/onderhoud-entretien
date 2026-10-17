@@ -23,6 +23,7 @@
       '<label class="lbl" for="fn">' + x.first + '</label><input id="fn" autocomplete="given-name" autocapitalize="words" placeholder="' + esc(x.firstPh) + '">' +
       '<label class="lbl" for="lnm">' + x.last + '</label><input id="lnm" autocomplete="family-name" autocapitalize="words" placeholder="' + esc(x.lastPh) + '">' +
       '<p class="hint">' + x.initials + ': <b id="ini"></b></p><div id="err"></div>' +
+      '<div class="btns"><a class="btn sec" id="inst" href="' + esc(OE.CFG.SHORTCUT_INSTALL) + '" target="_blank" rel="noopener">⬇ ' + esc(x.techInstall) + "</a></div>" +
       '<div class="btns">' + (first ? "" : '<button class="btn sec" id="bk">‹ ' + x.back + "</button>") +
       '<button class="btn pri" id="go">' + (first ? x.techStart : x.techSave) + "</button></div>" +
       (first ? '<p class="note">' + esc(x.techNote) + "</p>" : '<button class="small" id="setup">' + esc(x.techStart) + "</button>");

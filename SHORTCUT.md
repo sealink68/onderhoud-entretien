@@ -1,5 +1,11 @@
 # Opdracht „Onderhoud_Entretien” maken (iOS-app Opdrachten)
 
+> **Sneller: installeer de kant-en-klare opdracht** in plaats van ze zelf te bouwen:
+> https://www.icloud.com/shortcuts/0493c34a69d643109089c46a2e428cd3
+> (ook via de knop **1. Installeer de opdracht** in de app, en later via **⚙ Instellingen technieker**).
+> Tik op *Voeg opdracht toe*. Controleer daarna in de acties *Maak map aan* en *Bewaar bestand* of de locatie
+> (*Op mijn iPhone* / *iCloud Drive*) juist staat op jouw toestel. De rest van deze handleiding is alleen nodig om ze zelf te bouwen.
+
 De web-app start deze opdracht op twee manieren:
 
 | Moment | URL die de app opent | Invoer |
