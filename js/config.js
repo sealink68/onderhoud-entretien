@@ -113,7 +113,7 @@ OE.T = {
     techInstall: "1. Installer le raccourci", techStart: "2. Démarrer (créer les dossiers)", techSave: "Enregistrer",
     techNote: "Installez d’abord le raccourci « Onderhoud_Entretien » (étape 1). « Démarrer » enregistre votre nom et lance une fois le raccourci « Onderhoud_Entretien » pour créer les dossiers Rapport/Onderhoud_Entretien.",
     settings: "⚙ Paramètres technicien",
-    modeH: "Nombre d’appareils", mode1: "Un appareil", modeN: "Plusieurs appareils",
+    modeH: "Nombre d’appareils", mode1: "1 appareil", modeN: "Plusieurs appareils",
     mode1s: "Un seul dossier dans cet ordre de travail", modeNs: "Plusieurs dossiers dans un ordre de travail",
     woH: "Ordre de travail & dossier", woExisting: "Ordre de travail existant", woNew: "Nouvel ordre de travail", woNewPh: "numéro",
     woSearch: "Rechercher un n° WO…", woNotFound: "Aucun WO trouvé", woNoneYet: "Pas encore de WO", woChange: "Modifier", woLoading: "Chargement des ordres de travail…", woNone: "Aucun ordre de travail ouvert.", woErr: "Impossible de charger les ordres de travail.",
@@ -135,7 +135,7 @@ OE.T = {
     pdfErr: "Échec de la création/de l’envoi du PDF.", copyFail: "Échec de la copie dans le presse-papiers.",
     runShortcut: "▶ Relancer le raccourci", pdfDl: "⬇ Télécharger / partager le PDF", copyAgain: "Copier à nouveau le résumé",
     allOk: "Tout correct", remarks: "Remarques", tech: "Technicien", extra: "Infos compl.", empty: "(vide)",
-    single: "Un appareil", multi: "Plusieurs appareils", editing: "Vous modifiez un dossier existant.",
+    single: "1 appareil", multi: "Plusieurs appareils", editing: "Vous modifiez un dossier existant.",
     photoErr: "La photo n’a pas pu être traitée.", obxOne: "1 dossier en attente d’envoi", obxMany: "{n} dossiers en attente d’envoi", obxRetry: "Réessayer", obxOk: "Envoyé ✓", sentWait: "En attente d’envoi… (continue automatiquement)", sentDone: "Envoyé à la centrale ✓", finalOutbox: "Attention : {n} dossier(s) de cet appareil attendent encore l’envoi. Attendez qu’ils soient envoyés (internet requis) avant d’envoyer le rapport final.", storeFull: "Mémoire pleine – le dossier n’a pas pu être enregistré. Supprimez des photos et réessayez.", revisitOnce: "(N’apparaît qu’une seule fois dans le rapport.)", sentOver: "Dossier existant remplacé.", prevNote: "Vérifiez puis envoyez à la centrale.", dossiersIn: "Dossiers dans {w}"
   }
 };
@@ -145,7 +145,7 @@ OE.PDFT = {
   title: "Onderhoudsverslag / Rapport d’entretien",
   wo: "Werkorder / Ordre de travail", date: "Datum / Date", techs: "Techniekers / Techniciens",
   dossier: "Dossier", tech: "Technieker / Technicien", sent: "Verstuurd / Envoyé",
-  mode: { single: "1 toestel / Un appareil", multi: "Meerdere toestellen / Plusieurs appareils" },
+  mode: { single: "1 toestel / 1 appareil", multi: "Meerdere toestellen / Plusieurs appareils" },
   yes: "Juist / Correct", no: "Niet juist / Incorrect",
   extra: "Extra informatie / Informations complémentaires", photos: "Foto’s / Photos",
   page: "Pagina / Page", none: "—"

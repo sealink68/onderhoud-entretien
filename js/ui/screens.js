@@ -44,7 +44,7 @@
   SC.mode = function () {
     var S = OE.S, x = OE.t();
     $("card").innerHTML = '<div class="start"><h2>' + x.modeH + "</h2><p>" + esc(S.tech.first + " " + S.tech.last) + " · " + OE.initials(S.tech.first, S.tech.last) + "</p>" +
-      '<button class="btn ' + (S.mode === "multi" ? "sec" : "pri") + ' big" id="m1">1 toestel / un appareil<small>' + x.mode1s + "</small></button>" +
+      '<button class="btn ' + (S.mode === "multi" ? "sec" : "pri") + ' big" id="m1">1 toestel / 1 appareil<small>' + x.mode1s + "</small></button>" +
       '<button class="btn ' + (S.mode === "multi" ? "pri" : "sec") + ' big" id="mn">Meerdere toestellen / plusieurs appareils<small>' + x.modeNs + "</small></button></div>" +
       '<button class="small" id="set">' + x.settings + "</button>";
     OE.bind("m1", function () { S.mode = "single"; OE.go("wo"); });
