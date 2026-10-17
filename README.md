@@ -4,7 +4,7 @@ Web-app (NL/FR) voor onderhoudsverslagen van dormakaba-deurtechniekers in BelgiÃ
 Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met dezelfde look & feel.
 
 **Live (na publicatie):** https://sealink68.github.io/onderhoud-entretien/
-**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/0493c34a69d643109089c46a2e428cd3 (ook via de knop *1. Installeer de opdracht* in de app)
+**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/fc2b0b7ba6cf4bf6a3bc11dc0683d29e (ook via de knop *1. Installeer de opdracht* in de app)
 **Backend:** Cloudflare Worker `onderhoud-api` â†’ https://onderhoud-api.sealink68.workers.dev (bron in `../onderhoud-api/`)
 
 ## Verloop

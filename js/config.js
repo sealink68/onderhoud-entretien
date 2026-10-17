@@ -10,7 +10,7 @@ OE.CFG = {
   MYMEMORY_DE: "sealink@hotmail.com",
   GO: "https://go.servicemax.io",
   SHORTCUT: "Onderhoud_Entretien",
-  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/0493c34a69d643109089c46a2e428cd3", // iCloud link to install the Shortcut
+  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/fc2b0b7ba6cf4bf6a3bc11dc0683d29e", // iCloud link to install the Shortcut
   PHOTO_MAX: 1280, PHOTO_Q: 0.7,
   WO_PREFIX: "WO-",
   SEP: "────────────────────",
