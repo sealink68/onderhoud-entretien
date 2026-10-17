@@ -6,6 +6,7 @@
     b.onclick = function () { OE.S.lang = b.dataset.l; OE.save(); OE.render(1); };
   });
   OE.$("tipx").onclick = function () { OE.ls("oe_tip_hide", String(Date.now() + 7 * 864e5)); OE.$("tip").hidden = true; };
+  OE.$("help").onclick = OE.showHelp;
   window.addEventListener("resize", OE.fitAll);
   // Outbox: re-render the screens that show its state when it changes; retry pending uploads on start.
   OE.onOutboxChange = function () {

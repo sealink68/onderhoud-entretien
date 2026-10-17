@@ -33,7 +33,7 @@
   };
   /* Mandatory text popup (e.g. signer). onOk(value) runs inside the tap. */
   OE.promptModal = function (title, hint, value, needMsg, onOk) {
-    var m = OE.$("modal"), x = OE.t();
+    var m = OE.$("modal"), x = OE.t(); m.onclick = null; m.dataset.help = "";
     m.innerHTML = '<div class="card"><p id="mtext">' + OE.esc(title) + '</p><textarea id="minp" rows="1" autocapitalize="words" autocomplete="off"></textarea><div id="merr"></div>' +
       '<div class="btns"><button class="btn sec" id="mno">' + x.cancel + '</button><button class="btn pri" id="mok">' + x.ok + "</button></div></div>";
     m.hidden = false;
@@ -50,10 +50,32 @@
   };
   /* Confirm popup; onYes runs inside the user's tap (keeps clipboard/user-gesture rights). */
   OE.confirmModal = function (text, onYes) {
-    var m = OE.$("modal"), x = OE.t();
+    var m = OE.$("modal"), x = OE.t(); m.onclick = null; m.dataset.help = "";
     m.innerHTML = '<div class="card"><p id="mtext">' + OE.esc(text) + '</p><div class="btns"><button class="btn sec" id="mno">' + x.no + '</button><button class="btn ok" id="myes">' + x.yes + "</button></div></div>";
     m.hidden = false;
     OE.$("mno").onclick = function () { m.hidden = true; };
     OE.$("myes").onclick = function () { m.hidden = true; onYes(); };
+  };
+  /* Per-screen help popup (texts in OE.HELP). Language screen: both languages. */
+  function helpBody(L, sc) {
+    var lines = (OE.HELP[L][sc] || OE.HELP[L].mode), out = "", ul = "";
+    lines.forEach(function (l) {
+      if (l.indexOf("• ") === 0) ul += "<li>" + OE.esc(l.slice(2)) + "</li>";
+      else { if (ul) { out += "<ul>" + ul + "</ul>"; ul = ""; } out += "<p>" + OE.esc(l) + "</p>"; }
+    });
+    return out + (ul ? "<ul>" + ul + "</ul>" : "");
+  }
+  OE.showHelp = function () {
+    var S = OE.S, m = OE.$("modal"), sc = S.lang ? S.screen : "lang", both = !S.lang, L = S.lang || "nl", H = OE.HELP[L];
+    var title = both ? "Help / Aide" : H.title, close = both ? OE.HELP.nl.close + " / " + OE.HELP.fr.close : H.close;
+    var body = both ? "<h3>Nederlands</h3>" + helpBody("nl", sc) + "<h3>Français</h3>" + helpBody("fr", sc) : helpBody(L, sc);
+    m.innerHTML = '<div class="card hlp" id="hlp" role="dialog" aria-modal="true" aria-labelledby="hlph"><div class="hh"><h2 id="hlph">' + OE.esc(title) + '</h2><button type="button" class="hx" id="hlpx" aria-label="' + OE.esc(close) + '">×</button></div>' +
+      body + '<div class="btns"><button type="button" class="btn sec" id="hlpc">' + OE.esc(close) + "</button></div></div>";
+    m.hidden = false; m.dataset.help = "1";
+    function shut() { m.hidden = true; m.dataset.help = ""; m.onclick = null; document.removeEventListener("keydown", key); }
+    function key(e) { if (e.key === "Escape") shut(); }
+    OE.$("hlpx").onclick = OE.$("hlpc").onclick = shut;
+    m.onclick = function (e) { if (e.target === m) shut(); };
+    document.addEventListener("keydown", key);
   };
 })(window.OE);

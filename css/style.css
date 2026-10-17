@@ -106,3 +106,13 @@ h1#title{font-size:22px}
 .wosel{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid var(--a);background:#eef2ff;border-radius:12px;padding:10px 12px}
 .wosel b{font-size:17px;word-break:break-all}.wosel small{display:block;color:var(--mu);font-size:12px;margin-left:20px}
 .wosel button{border:0;background:#fff;color:var(--a);font-weight:800;border-radius:10px;padding:10px 12px;min-height:44px;cursor:pointer}
+/* Per-screen help */
+.hr{display:flex;align-items:center;gap:8px}
+.help{flex:none;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:rgba(255,255,255,.18);color:#fff;font-size:19px;font-weight:800;line-height:1;padding:0;cursor:pointer}
+.help:active{background:rgba(255,255,255,.35)}
+.modal .card.hlp{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:16px}
+.hlp .hh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.hlp h2{margin:0;font-size:20px}.hlp h3{margin:14px 0 4px;font-size:15px;color:var(--a)}
+.hlp .hx{border:0;background:#f1f5f9;color:var(--mu);font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;flex:none}
+.hlp p{font-size:15px;font-weight:500;line-height:1.45;margin:0 0 6px}
+.hlp ul{overflow-wrap:anywhere;margin:0 0 6px;padding-left:20px;font-size:15px;line-height:1.45}.hlp li{margin:3px 0}
