@@ -15,8 +15,22 @@
     OE.$("title").textContent = OE.T[L].title; document.title = OE.CFG.APP; document.documentElement.lang = L;
     [].forEach.call(document.querySelectorAll("#seg button"), function (b) { b.classList.toggle("on", b.dataset.l === S.lang); });
     OE.$("seg").style.visibility = S.lang ? "visible" : "hidden";
-    OE.updateTip(); if (OE.outbox) OE.outbox.status();
+    OE.updateTip(); if (OE.outbox) OE.outbox.status(); OE.fitBrand();
   };
+  /* dormakaba logo: full word mark only when it fits next to the title, else just the red symbol. */
+  OE.fitBrand = function () {
+    var h = document.querySelector("header"), b = h && h.querySelector(".brand"), t = OE.$("title"), r = h && h.querySelector(".hr");
+    if (!b || !t || !r) return;
+    h.classList.remove("bc", "bt", "bt2", "bt3"); t.style.whiteSpace = "nowrap";
+    var g = function (e) { return parseFloat(getComputedStyle(e).columnGap) || 0; }, room = h.clientWidth - r.offsetWidth - g(h);
+    var over = function () { return b.offsetWidth + g(b.parentNode) + t.scrollWidth > room + 0.5; };
+    if (over()) h.classList.add("bc");
+    var k = ["bt", "bt2", "bt3"], i = 0;
+    for (; i < k.length && over(); i++) { if (i) h.classList.remove(k[i - 1]); h.classList.add(k[i]); }
+    if (over() && /\s/.test(t.textContent)) h.classList.remove(k[i - 1]); /* multi-word title: wrap at normal size, as before */
+    t.style.whiteSpace = "";
+  };
+  window.addEventListener("resize", function () { OE.fitBrand(); });
   OE.anim = function (dir) { var c = OE.$("card"); c.classList.remove("slide-in-r", "slide-in-l"); void c.offsetWidth; c.classList.add(dir < 0 ? "slide-in-l" : "slide-in-r"); };
   OE.render = function (dir) {
     var S = OE.S; OE.hdr(); OE.$("top").innerHTML = "";
