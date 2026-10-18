@@ -31,8 +31,25 @@
     document.body.appendChild(a); a.click(); setTimeout(function () { if (a.parentNode) a.parentNode.removeChild(a); }, 0);
   }
   OE.openGo = function () { openBlank(OE.CFG.GO); };
+  /* "ipad" | "iphone" | "other". iPadOS 13+ Safari reports a Mac UA ("Macintosh", platform MacIntel) but has touch points. */
+  OE.deviceKind = function () {
+    var ua = navigator.userAgent || "", mac = navigator.platform === "MacIntel" || /Macintosh/.test(ua);
+    if (/iPad/.test(ua) || (mac && navigator.maxTouchPoints > 1)) return "ipad";
+    if (/iPhone|iPod/.test(ua)) return "iphone";
+    return "other";
+  };
+  /* Shortcut per device; desktop/Android fall back to the iPhone shortcut (the tech screen shows both install links there). */
+  OE.shortcutName = function (kind) { return (kind || OE.deviceKind()) === "ipad" ? OE.CFG.SHORTCUT_NAME_IPAD : OE.CFG.SHORTCUT_NAME_IPHONE; };
+  OE.shortcutInstall = function (kind) { return (kind || OE.deviceKind()) === "ipad" ? OE.CFG.SHORTCUT_INSTALL_IPAD : OE.CFG.SHORTCUT_INSTALL_IPHONE; };
+  /* Device name for "Op mijn iPhone/iPad" texts. */
+  OE.deviceLabel = function (kind) { kind = kind || OE.deviceKind(); return kind === "ipad" ? "iPad" : kind === "iphone" ? "iPhone" : "iPhone/iPad"; };
+  /* Fill {dev} and {sc} placeholders in UI/help texts. */
+  OE.devText = function (s) {
+    var k = OE.deviceKind(), sc = k === "other" ? OE.CFG.SHORTCUT_NAME_IPHONE + " / " + OE.CFG.SHORTCUT_NAME_IPAD : OE.shortcutName(k);
+    return String(s).replace(/\{dev\}/g, OE.deviceLabel(k)).replace(/\{sc\}/g, sc);
+  };
   OE.shortcutUrl = function (text) {
-    return "shortcuts://run-shortcut?name=" + encodeURIComponent(OE.CFG.SHORTCUT) + (text != null ? "&input=text&text=" + encodeURIComponent(text) : "");
+    return "shortcuts://run-shortcut?name=" + encodeURIComponent(OE.shortcutName()) + (text != null ? "&input=text&text=" + encodeURIComponent(text) : "");
   };
   OE.runShortcut = function (text) {
     var url = OE.shortcutUrl(text);

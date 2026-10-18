@@ -74,6 +74,7 @@
   function helpBody(L, sc) {
     var lines = (OE.HELP[L][sc] || OE.HELP[L].mode), out = "", ul = "";
     lines.forEach(function (l) {
+      l = OE.devText(l);
       if (l.indexOf("• ") === 0) ul += "<li>" + OE.esc(l.slice(2)) + "</li>";
       else { if (ul) { out += "<ul>" + ul + "</ul>"; ul = ""; } out += "<p>" + OE.esc(l) + "</p>"; }
     });

@@ -16,6 +16,14 @@
     });
   };
 
+  /* "1. Installeer de opdracht": the right link for this iPhone/iPad; desktop/Android show both (labelled). */
+  function instButtons(x) {
+    var k = OE.deviceKind();
+    function a(id, kind, label) { return '<a class="btn sec" id="' + id + '" href="' + esc(OE.shortcutInstall(kind)) + '" target="_blank" rel="noopener">⬇ ' + esc(label) + "</a>"; }
+    if (k !== "other") return '<div class="btns">' + a("inst", k, x.techInstall) + "</div>";
+    return '<div class="stack">' + a("inst", "iphone", x.techInstallFor.replace("{dev}", "iPhone")) + a("insti", "ipad", x.techInstallFor.replace("{dev}", "iPad")) + "</div>";
+  }
+
   /* ---------- 2. technician (once, editable via settings) ---------- */
   SC.tech = function () {
     var S = OE.S, x = OE.t(), first = !(S.tech.first && S.tech.last);
@@ -23,10 +31,10 @@
       '<label class="lbl" for="fn">' + x.first + '</label><input id="fn" autocomplete="given-name" autocapitalize="words" placeholder="' + esc(x.firstPh) + '">' +
       '<label class="lbl" for="lnm">' + x.last + '</label><input id="lnm" autocomplete="family-name" autocapitalize="words" placeholder="' + esc(x.lastPh) + '">' +
       '<p class="hint">' + x.initials + ': <b id="ini"></b></p><div id="err"></div>' +
-      '<div class="btns"><a class="btn sec" id="inst" href="' + esc(OE.CFG.SHORTCUT_INSTALL) + '" target="_blank" rel="noopener">⬇ ' + esc(x.techInstall) + "</a></div>" +
+      instButtons(x) +
       '<div class="btns">' + (first ? "" : '<button class="btn sec" id="bk">‹ ' + x.back + "</button>") +
       '<button class="btn pri" id="go">' + (first ? x.techStart : x.techSave) + "</button></div>" +
-      (first ? '<p class="note">' + esc(x.techNote) + "</p>" : '<button class="small" id="setup">' + esc(x.techStart) + "</button>");
+      (first ? '<p class="note">' + esc(OE.devText(x.techNote)) + "</p>" : '<button class="small" id="setup">' + esc(x.techStart) + "</button>");
     var fn = $("fn"), ln = $("lnm");
     fn.value = S.tech.first; ln.value = S.tech.last;
     function upd() { $("ini").textContent = OE.initials(fn.value, ln.value) || "–"; }

@@ -94,7 +94,7 @@ with sync_playwright() as p:
   # ================= iPhone 13 portrait (390x844) =================
   c = ctx(b, 390, 844); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
   start(pg, state("nl"))
-  chk(pg.evaluate("OE.CFG.SHORTCUT_INSTALL") == "https://www.icloud.com/shortcuts/527981a49cbd4cb09a70e05ca6661274", "new Shortcut install link in config")
+  chk(pg.evaluate("OE.deviceKind()") == "iphone" and pg.evaluate("OE.shortcutInstall()") == "https://www.icloud.com/shortcuts/6996453996e64d18818c3d3bda1a5fab", "iPhone Shortcut install link (OC_Iphone)")
   chk(pg.get_attribute("#cam", "capture") == "environment" and pg.get_attribute("#lib", "multiple") is not None, "camera + library inputs unchanged")
   pg.tap("#help"); pg.wait_for_selector("#hlp"); t = pg.inner_text("#hlp"); pg.tap("#hlpx")
   chk("tekenscherm" in t and "maatlijn" in t and "Korte beschrijving" not in t and "optioneel, max. 150 tekens" in t, "help (NL) explains drawing tools + description")
