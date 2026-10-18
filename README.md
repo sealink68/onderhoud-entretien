@@ -4,7 +4,7 @@ Web-app (NL/FR) voor onderhoudsverslagen van dormakaba-deurtechniekers in Belgi�
 Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met dezelfde look & feel.
 
 **Live (na publicatie):** https://sealink68.github.io/onderhoud-entretien/
-**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/ae5ae596ed7d4671870b9b685ba90f43 (ook via de knop *1. Installeer de opdracht* in de app). De opdracht bewaart in **iCloud Drive › Rapport › Onderhoud_Entretien**: aanbevolen, werkt op iPhone én iPad. Na het bewaren opent de opdracht de app ServiceMax Go.
+**iOS-opdracht installeren:** https://www.icloud.com/shortcuts/527981a49cbd4cb09a70e05ca6661274 (ook via de knop *1. Installeer de opdracht* in de app). De opdracht bewaart in **iCloud Drive › Rapport › Onderhoud_Entretien**: aanbevolen, werkt op iPhone én iPad. Bij `setup` maakt de opdracht ook de extra map **iCloud Drive › Rapport › Depannage** aan (voor een latere uitbreiding van Werkrapport). Na het bewaren opent de opdracht de app ServiceMax Go.
 **Backend:** Cloudflare Worker `onderhoud-api` → https://onderhoud-api.sealink68.workers.dev (bron in `../onderhoud-api/`)
 
 ## Verloop
@@ -13,7 +13,7 @@ Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met deze
 2. Eenmalig: voornaam + achternaam van de technieker. Stap *1. Installeer de opdracht* opent de iCloud-link van de opdracht, stap *2. Start* bewaart de naam. De initialen worden daaruit afgeleid. *Start* bewaart je naam en start de iOS-opdracht met `setup` om de mappen aan te maken. Aanpassen kan later via **⚙ Instellingen technieker**.
 3. Keuze: 1 toestel of meerdere toestellen. Beide keuzes volgen hetzelfde verloop; de keuze wordt alleen bewaard.
 4. Werkorder: kies een bestaande WO (lijst van de worker) of maak een nieuwe aan (prefix `WO-` wordt afgedwongen). Vul daarna het dossiernummer in.
-5. Acht stellingen, elk standaard **Juist**. Kies je **Niet juist**, dan verschijnt de juiste invulling: een beschrijving, een vaste tekst of *revisit*. Bij stelling 1 is minstens één foto verplicht. Foto's worden verkleind tot ±1280 px (JPEG, kwaliteit 0.7) en krijgen de naam `<WO>_<dossier>_<n>.jpg`. De revisit-zin staat maar één keer per dossier in het verslag.
+5. Acht stellingen, elk standaard **Juist**. Kies je **Niet juist**, dan verschijnt de juiste invulling: een beschrijving, een vaste tekst of *revisit*. Bij stelling 1 is minstens één foto verplicht. Na elke foto (camera of bibliotheek) opent meteen een tekeneditor op volledig scherm (pijl, cirkel/ellips, rechthoek, vrij tekenen, maatlijn met label, tekst; 5 kleuren, 3 diktes, ongedaan maken, alles wissen, Annuleren/Klaar), daarna een optionele korte beschrijving (max. 150 tekens). Alleen de bewerkte versie wordt bewaard (max. 2000 px lange zijde, JPEG ±0.85) met de naam `<WO>_<dossier>_<n>.jpg`; de beschrijving staat in het dossier (`answers[i].photoDesc`) en komt, automatisch vertaald, onder de foto in de PDF. De revisit-zin staat maar één keer per dossier in het verslag.
 6. Extra informatie (optioneel), daarna een voorbeeld met automatische vertaling. Vanuit het voorbeeld verstuur je het dossier naar centraal.
 6b. *Verstuur naar centraal* zet het dossier (met foto's) in een **outbox** op het toestel en opent meteen ServiceMax Go (in dezelfde tik). Het opladen loopt verder op de achtergrond en wordt automatisch opnieuw geprobeerd (bij opstarten, terugkeren naar de app, internet terug, elke 20 s) tot de server het bevestigt. Bovenaan staat dan “1 dossier wacht op verzending” of “Verzonden ✓”. Het eindverslag waarschuwt als er op dit toestel nog dossiers wachten.
 7. Drie keuzes: **Nieuw dossier**, **Eindverslag WO** of **Sluiten app**. *Sluiten app* zet de app terug op de startpagina en opent ServiceMax Go.
@@ -76,3 +76,4 @@ Kies eventueel bij **Settings → Pages → Source** de optie **GitHub Actions**
 
 `/workspace/test_onderhoud.py` (Playwright, headless Chromium, 390×844) doorloopt het volledige verloop met 2 dossiers.
 Serveer de map eerst lokaal, bv. `python3 -m http.server 8817 --bind 127.0.0.1`.
+`tests/test_annot.py` test de foto-editor en de fotobeschrijving (iPhone 13 portret/landschap en iPad, backend en vertaling volledig gemockt) en schrijft screenshots naar `screens_annot/`.

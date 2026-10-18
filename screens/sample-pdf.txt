@@ -1,0 +1,128 @@
+Onderhoudsverslag / Rapport d’entretien                 Werkorder / Ordre de travail: WO-TEST145839 · 18/10/2026 14:59
+
+
+
+
+Onderhoudsverslag / Rapport d’entretien
+Werkorder / Ordre de travail WO-TEST145839
+Datum / Date                       18/10/2026 14:59
+Dossiers                           2 (D-OK1 | D-REM2)
+Techniekers / Techniciens          Joachim Lust (JL)
+Ondertekenaar / Signataire Jan Peeters (klant)
+
+
+  Dossier D-OK1                                                                             Alles juist / Tout correct
+  Technieker / Technicien: Joachim Lust (JL)
+  Meerdere toestellen / Plusieurs appareils · Verstuurd / Envoyé: 18/10/2026 14:58
+
+
+1. Er is geen visuele schade of beperking aan toestel bij aankomst.                                  Juist / Correct
+   Il n’y a aucun dommage visible ni aucune limitation de l’appareil à l’arrivée.
+
+2. Het toestel werkte 100% bij aankomst.                                                             Juist / Correct
+   L’appareil fonctionnait à 100 % à l’arrivée.
+
+3. Er werden GEEN onderdelen vervangen.                                                              Juist / Correct
+   AUCUNE pièce n’a été remplacée.
+
+4. Er zijn geen extra onderdelen (parts request) te bestellen.                                       Juist / Correct
+   Aucune pièce supplémentaire (parts request) ne doit être commandée.
+
+5. Er moet GEEN herstellingswerkorder (revisit) aangevraagd worden.                                  Juist / Correct
+   AUCUN ordre de travail de réparation (revisit) ne doit être demandé.
+
+6. Na onderhoud is mechanisch alles ok.                                                              Juist / Correct
+   Après l’entretien, tout est OK sur le plan mécanique.
+
+7. Na onderhoud is elektronisch alles ok.                                                            Juist / Correct
+   Après l’entretien, tout est OK sur le plan électronique.
+
+8. Na onderhoud is het toestel 100% operationeel.                                                    Juist / Correct
+   Après l’entretien, l’appareil est opérationnel à 100 %.
+
+
+Extra informatie / Informations complémentaires
+  —
+
+
+
+
+OC_WO-TEST145839.pdf · dormakaba                                                                        Pagina / Page 1/3
+Onderhoudsverslag / Rapport d’entretien                           Werkorder / Ordre de travail: WO-TEST145839 · 18/10/2026 14:59
+
+
+
+
+  Dossier D-REM2                                                                                   Opmerkingen / Remarques
+  Technieker / Technicien: Joachim Lust (JL)
+  Meerdere toestellen / Plusieurs appareils · Verstuurd / Envoyé: 18/10/2026 14:59
+
+
+1. Er is geen visuele schade of beperking aan toestel bij aankomst.                                         Niet juist / Incorrect
+   Il n’y a aucun dommage visible ni aucune limitation de l’appareil à l’arrivée.
+   NL: Kras op het deurblad en de klink hangt los.
+   FR: Il y a une rayure sur le vantail de la porte et la poignée est desserrée.
+   (Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier)
+
+2. Het toestel werkte 100% bij aankomst.                                                                       Juist / Correct
+   L’appareil fonctionnait à 100 % à l’arrivée.
+
+3. Er werden GEEN onderdelen vervangen.                                                                     Niet juist / Incorrect
+   AUCUNE pièce n’a été remplacée.
+   NL: Zie gebruikte onderdelen.
+   FR: Voir les pièces utilisées.
+
+4. Er zijn geen extra onderdelen (parts request) te bestellen.                                                 Juist / Correct
+   Aucune pièce supplémentaire (parts request) ne doit être commandée.
+
+5. Er moet GEEN herstellingswerkorder (revisit) aangevraagd worden.                                         Niet juist / Incorrect
+   AUCUN ordre de travail de réparation (revisit) ne doit être demandé.
+   NL: Revisit voor herstelling is aangevraagd.
+   FR: Un revisit pour réparation a été demandé.
+
+6. Na onderhoud is mechanisch alles ok.                                                                     Niet juist / Incorrect
+   Après l’entretien, tout est OK sur le plan mécanique.
+   NL: Scharnier is versleten.
+   FR: La charnière est usée.
+   (Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier)
+
+7. Na onderhoud is elektronisch alles ok.                                                                      Juist / Correct
+   Après l’entretien, tout est OK sur le plan électronique.
+
+8. Na onderhoud is het toestel 100% operationeel.                                                           Niet juist / Incorrect
+   Après l’entretien, l’appareil est opérationnel à 100 %.
+   NL: De deur sluit te traag.
+   FR: La porte se ferme trop lentement.
+   (Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier)
+
+
+Extra informatie / Informations complémentaires
+  NL: Klant vraagt een offerte voor een nieuwe deurdranger.
+  FR: Le client demande un devis pour un nouveau ferme-porte.
+   (Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier)
+
+
+
+
+OC_WO-TEST145839.pdf · dormakaba                                                                                  Pagina / Page 2/3
+Onderhoudsverslag / Rapport d’entretien                                      Werkorder / Ordre de travail: WO-TEST145839 · 18/10/2026 14:59
+
+
+
+
+Foto’s / Photos
+
+
+
+
+WO-TEST145839_D-REM2_1.jpg
+NL: Kras rechtsonder op het deurblad.
+FR: Il y a une rayure en bas à droite du vantail de la porte.
+(Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez
+vérifier)
+
+
+
+
+OC_WO-TEST145839.pdf · dormakaba                                                                                            Pagina / Page 3/3
+

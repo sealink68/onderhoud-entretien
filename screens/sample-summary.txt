@@ -1,0 +1,17 @@
+Bij onderstaande toestellen werd een succesvol onderhoud uitgevoerd, waar geen mechanische- of electronische storingen werden vastgesteld en ook geen onderdelen vervangen werden.
+D-OK1
+____________________
+D-REM2
+Bij bovenstaande toestellen werden opmerkingen genoteerd en/of onderdelen vervangen. Alle details staan in het uitgebreide onderhoudsverslag (PDF), dat op aanvraag kan worden toegestuurd.
+Volledig verslag downloaden (30 dagen geldig): https://onderhoud-api.sealink68.workers.dev/wo/WO-TEST145839/pdf
+Ondertekenaar: Jan Peeters (klant)
+
+────────────────────
+
+Pour les appareils ci-dessous, un entretien a été effectué avec succès : aucune panne mécanique ou électronique n’a été constatée et aucune pièce n’a été remplacée.
+D-OK1
+____________________
+D-REM2
+Pour les appareils ci-dessus, des remarques ont été notées et/ou des pièces ont été remplacées. Tous les détails figurent dans le rapport d’entretien détaillé (PDF), disponible sur demande.
+Télécharger le rapport complet (valable 30 jours) : https://onderhoud-api.sealink68.workers.dev/wo/WO-TEST145839/pdf
+Signataire : Jan Peeters (klant)

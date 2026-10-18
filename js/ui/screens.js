@@ -154,7 +154,7 @@
   /* ---------- 5. checklist (one statement per page) ---------- */
   function photoHtml(a) {
     return '<div class="photos">' + a.photos.map(function (p, k) {
-      return '<figure><img src="' + esc(p.data || OE.api.photoUrl(OE.S.wo, p.name)) + '" alt=""><button class="del" data-k="' + k + '" aria-label="x">×</button><figcaption>' + esc(p.name) + (p.up ? " ✓" : "") + "</figcaption></figure>";
+      return '<figure><img src="' + esc(p.data || OE.api.photoUrl(OE.S.wo, p.name)) + '" alt=""><button class="del" data-k="' + k + '" aria-label="x">×</button><figcaption>' + esc(p.name) + (p.up ? " ✓" : "") + (p.desc ? '<span class="pd">' + esc(p.desc) + "</span>" : "") + "</figcaption></figure>";
     }).join("") + "</div>";
   }
   SC.q = function () {
@@ -184,12 +184,16 @@
       if (i < N - 1) { S.step++; OE.go("q"); } else OE.go("extra");
     });
   };
+  /* Every chosen photo (camera or library) first goes through the annotation editor + optional description
+     (js/annot.js). Cancel = this photo is not added. Only the annotated JPEG is kept. */
   function addPhotos(a, files) {
     var S = OE.S;
     files.reduce(function (pr, f) {
       return pr.then(function () {
-        return OE.resizePhoto(f).then(function (data) {
-          var p = { name: OE.photoName(S.wo, S.dossier, ++S.photoSeq), data: data, up: false };
+        return OE.annotate(f).then(function (r) {
+          if (!r) return;
+          var data = r.data, p = { name: OE.photoName(S.wo, S.dossier, ++S.photoSeq), data: data, up: false };
+          if (r.desc) p.desc = r.desc;
           a.photos.push(p); OE.save();
           OE.api.putPhoto(S.wo, p.name, OE.dataUrlToBlob(data)).then(function () { p.up = true; delete p.data; OE.save(); }, function () {});
         });
@@ -217,7 +221,9 @@
       lang: ed ? ed.lang : S.lang, tech: tech, createdAt: new Date().toISOString(),
       answers: S.answers.map(function (a, i) {
         var q = Q[i], keepText = !a.ok && (q.kind === "text" || q.desc);
-        return { ok: !!a.ok, text: keepText ? a.text.trim() : "", photos: !a.ok && q.photo ? a.photos.map(function (p) { return p.name; }) : [] };
+        var keepPh = !a.ok && q.photo, r = { ok: !!a.ok, text: keepText ? a.text.trim() : "", photos: keepPh ? a.photos.map(function (p) { return p.name; }) : [] };
+        if (keepPh) a.photos.forEach(function (p) { var t = String(p.desc || "").trim(); if (t) (r.photoDesc = r.photoDesc || {})[p.name] = t; });
+        return r;
       }),
       extra: S.extra.trim(),
       texts: Q.map(function (q, i) { return { nl: q.nl, fr: q.fr, fixed: q.fixed || null, revisit: q.kind === "revisit" ? OE.REVISIT : null }; })
@@ -225,17 +231,17 @@
     if (ed) { d.editedBy = { first: S.tech.first, last: S.tech.last, initials: OE.initials(S.tech.first, S.tech.last) }; d.firstCreatedAt = ed.createdAt; }
     return d;
   };
-  function srcKey(d) { return JSON.stringify([d.lang, d.answers.map(function (a) { return a.text; }), d.extra]); }
+  function srcKey(d) { return JSON.stringify([d.lang, d.answers.map(function (a) { return a.text; }), d.extra, OE.descList(d)]); }
   function ensureTr(d, force) {
     var S = OE.S, k = srcKey(d);
     if (!force && S.tr && S.tr.key === k) return Promise.resolve(S.tr);
-    var to = OE.other(d.lang), items = d.answers.map(function (a) { return a.text; }).concat([d.extra]);
-    return OE.translate(d.lang, to, items).then(function (r) {
-      S.tr = { key: k, from: d.lang, to: to, engine: r.engine, fail: r.fail, answers: r.items.slice(0, Q.length), extra: r.items[Q.length] };
+    var to = OE.other(d.lang);
+    return OE.translate(d.lang, to, OE.trSource(d)).then(function (r) {
+      S.tr = OE.trFromResult(d, to, r); S.tr.key = k;
       OE.save(); return S.tr;
     });
   }
-  function withTr(d) { var t = OE.S.tr; if (t) d.tr = { from: t.from, to: t.to, engine: t.engine, fail: t.fail, answers: t.answers, extra: t.extra }; return d; }
+  function withTr(d) { var t = OE.S.tr; if (t) d.tr = { from: t.from, to: t.to, engine: t.engine, fail: t.fail, answers: t.answers, extra: t.extra, photoDesc: t.photoDesc || {} }; return d; }
 
   function dossierCard(d, L, opts) {
     var x = OE.T[L], rem = OE.hasRemarks(d);
@@ -247,7 +253,11 @@
         var other = opts.tr ? OE.reportRows(d, O)[r.n - 1] : null;
         return "<li><span class=\"" + (r.ok ? "g" : "r") + "\">" + (r.ok ? "✓" : "✗") + "</span> " + esc(r.n + ". " + r.q) +
           r.sub.map(function (s, k) { var o = other && other.sub[k]; return "<em>" + esc(s.t) + "</em>" + (o && (o.tr || s.tr) ? '<em class="tr">→ ' + esc(o.t) + "</em>" : ""); }).join("") +
-          (r.photos.length ? "<em>📷 " + esc(r.photos.join(", ")) + "</em>" : "") + "</li>";
+          (r.photos.length ? "<em>📷 " + esc(r.photos.join(", ")) + "</em>" : "") +
+          r.photos.map(function (n, k) {
+            var pd = r.pd[k], o = other && other.pd[k]; if (!pd.t.trim()) return "";
+            return '<em class="pdesc">📷 ' + esc(n) + ": " + esc(pd.t) + "</em>" + (o && (o.tr || pd.tr) ? '<em class="tr">→ ' + esc(o.t) + "</em>" : "");
+          }).join("") + "</li>";
       }).join("") +
       (d.extra ? "<li>" + x.extra + ": <em>" + esc(OE.freeText(d, "extra", L).t) + "</em>" + (opts.tr ? '<em class="tr">→ ' + esc(OE.freeText(d, "extra", O).t) + "</em>" : "") + "</li>" : "") +
       "</ul>" + (opts.edit ? '<button class="edit" data-edit="' + esc(d.dossier) + '">✎ ' + x.edit + "</button>" : "") + "</div>";
@@ -315,11 +325,11 @@
   function fillTr(w) {
     // Dossiers without (good) translation are translated now.
     return w.dossiers.reduce(function (pr, d) {
-      if (d.tr && !d.tr.fail) return pr;
+      if (OE.trComplete(d)) return pr;
       return pr.then(function () {
         var to = OE.other(d.lang);
-        return OE.translate(d.lang, to, d.answers.map(function (a) { return a.text; }).concat([d.extra || ""])).then(function (r) {
-          d.tr = { from: d.lang, to: to, engine: r.engine, fail: r.fail, answers: r.items.slice(0, Q.length), extra: r.items[Q.length] };
+        return OE.translate(d.lang, to, OE.trSource(d)).then(function (r) {
+          d.tr = OE.trFromResult(d, to, r);
         });
       });
     }, Promise.resolve());
@@ -396,7 +406,8 @@
     S.dossier = d.dossier; S.extra = d.extra || ""; S.tr = null; S.step = 0;
     S.answers = d.answers.map(function (a) {
       (a.photos || []).forEach(function (n) { var m = /_(\d+)\.jpg$/.exec(n); if (m) maxN = Math.max(maxN, +m[1]); });
-      return { ok: !!a.ok, text: a.text || "", photos: (a.photos || []).map(function (n) { return { name: n, up: true }; }) };
+      var pd = a.photoDesc || {};
+      return { ok: !!a.ok, text: a.text || "", photos: (a.photos || []).map(function (n) { var p = { name: n, up: true }; if (pd[n]) p.desc = pd[n]; return p; }) };
     });
     S.photoSeq = maxN; S.editing = { tech: d.tech, mode: d.mode, lang: d.lang, createdAt: d.firstCreatedAt || d.createdAt };
     OE.go("q");

@@ -1,8 +1,9 @@
 # Opdracht „Onderhoud_Entretien” maken (iOS-app Opdrachten)
 
 > **Sneller: installeer de kant-en-klare opdracht** in plaats van ze zelf te bouwen:
-> https://www.icloud.com/shortcuts/ae5ae596ed7d4671870b9b685ba90f43
+> https://www.icloud.com/shortcuts/527981a49cbd4cb09a70e05ca6661274
 > (ook via de knop **1. Installeer de opdracht** in de app, en later via **⚙ Instellingen technieker**).
+> Deze versie maakt bij `setup` ook de extra map **iCloud Drive › Rapport › Depannage** aan (voor een latere uitbreiding van Werkrapport).
 > Tik op *Voeg opdracht toe*. Controleer daarna in de acties *Maak map aan* en *Bewaar bestand* of de locatie
 > op **iCloud Drive** staat (aanbevolen: werkt op iPhone én iPad). Kies ze anders één keer opnieuw. De rest van deze handleiding is alleen nodig om ze zelf te bouwen.
 
@@ -13,7 +14,7 @@ De web-app start deze opdracht op twee manieren:
 | Eerste start (knop *Start* bij de technieker) | `shortcuts://run-shortcut?name=Onderhoud_Entretien&input=text&text=setup` | `setup` |
 | Eindverslag WO verstuurd | `shortcuts://run-shortcut?name=Onderhoud_Entretien&input=text&text=WO-12345` | het WO-nummer |
 
-Bij `setup` maakt de opdracht alleen de mappen aan. Bij een WO-nummer downloadt ze
+Bij `setup` maakt de opdracht alleen de mappen aan (`Rapport`, `Rapport/Onderhoud_Entretien` en, in de kant-en-klare opdracht, ook `Rapport/Depannage`). Bij een WO-nummer downloadt ze
 `https://onderhoud-api.sealink68.workers.dev/wo/<WO>/pdf` en bewaart ze die als
 `Rapport/Onderhoud_Entretien/OC_<WO>.pdf`.
 
@@ -39,6 +40,7 @@ Bij `setup` maakt de opdracht alleen de mappen aan. Bij een WO-nummer downloadt 
    - Tik op de locatie en kies **iCloud Drive** (de hoofdmap). **Aanbevolen**: zo werkt de opdracht op iPhone én iPad. Gebruik *Op mijn iPhone* liever niet: die locatie is aan één toestel gebonden en bestaat niet op een iPad.
    - Pad: `Rapport`
 6. Voeg daaronder nog een **Maak map aan** toe, zelfde locatie, pad: `Rapport/Onderhoud_Entretien`.
+   Optioneel (zoals in de kant-en-klare opdracht): nog een **Maak map aan**, pad `Rapport/Depannage` (voor een latere uitbreiding van Werkrapport).
 7. Optioneel: **Toon melding** (*Show Notification*) met de tekst `Mappen klaar / Dossiers prêts`.
 8. Voeg als laatste in deze tak **Stop deze opdracht** (*Stop This Shortcut*) toe.
 
@@ -68,6 +70,7 @@ Ontvang Tekst-invoer van Deelpaneel (indien geen invoer: Ga door)
 Als  Opdrachtinvoer  is  setup
     Maak map aan  Rapport               (iCloud Drive)
     Maak map aan  Rapport/Onderhoud_Entretien
+    Maak map aan  Rapport/Depannage     (kant-en-klare opdracht; voor Werkrapport)
     Toon melding  Mappen klaar
     Stop deze opdracht
 Anders

@@ -10,8 +10,10 @@ OE.CFG = {
   MYMEMORY_DE: "sealink@hotmail.com",
   GO: "https://go.servicemax.io",
   SHORTCUT: "Onderhoud_Entretien",
-  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/ae5ae596ed7d4671870b9b685ba90f43", // iCloud link to install the Shortcut
-  PHOTO_MAX: 1280, PHOTO_Q: 0.7,
+  SHORTCUT_INSTALL: "https://www.icloud.com/shortcuts/527981a49cbd4cb09a70e05ca6661274", // iCloud link to install the Shortcut
+  PHOTO_MAX: 1280, PHOTO_Q: 0.7, // legacy resize (OE.resizePhoto), no longer used for new photos
+  ANNOT_MAX: 2000, ANNOT_Q: 0.85, ANNOT_MAXCHARS: 1400000, // annotated photo: max long side, JPEG quality, max data-URL size (~1 MB)
+  DESC_MAX: 150, // optional short photo description
   WO_PREFIX: "WO-",
   SEP: "────────────────────",
   UNDERSCORES: "____________________" // exactly 20
@@ -104,6 +106,11 @@ OE.T = {
     runShortcut: "▶ Opdracht opnieuw starten", pdfDl: "⬇ PDF downloaden / delen", copyAgain: "Samenvatting opnieuw kopiëren",
     allOk: "Alles juist", remarks: "Opmerkingen", tech: "Technieker", extra: "Extra info", empty: "(leeg)",
     single: "1 toestel", multi: "Meerdere toestellen", editing: "Je bewerkt een bestaand dossier.",
+    anTitle: "Foto bewerken", anLoading: "Foto laden…", anCancel: "Annuleren", anDone: "Klaar", anOk: "OK", anUndo: "Ongedaan maken", anClear: "Alles wissen",
+    anArrow: "Pijl", anEllipse: "Cirkel / ellips", anRect: "Rechthoek", anPen: "Vrij tekenen", anDim: "Maatlijn", anText: "Tekst",
+    anRed: "Rood", anYellow: "Geel", anBlue: "Blauw", anWhite: "Wit", anBlack: "Zwart", anThin: "Dun", anMid: "Middel", anThick: "Dik",
+    anDimAsk: "Maat (bv. 1250 mm)", anTextAsk: "Tekst",
+    descH: "Korte beschrijving (optioneel)", descPh: "bv. kras onderaan op het deurblad", descSkip: "Overslaan", descDone: "Klaar",
     signerH: "Verantwoordelijke ondertekenaar", signerPh: "Naam van de klant/verantwoordelijke ter plaatse", signerNeed: "Vul de naam van de ondertekenaar in.", ok: "OK", photoErr: "Foto kon niet verwerkt worden.", obxOne: "1 dossier wacht op verzending", obxMany: "{n} dossiers wachten op verzending", obxRetry: "Opnieuw", obxOk: "Verzonden ✓", sentWait: "Wacht op verzending… (gaat automatisch verder)", sentDone: "Verzonden naar centraal ✓", finalOutbox: "Let op: op dit toestel wachten nog {n} dossier(s) op verzending. Wacht tot ze verzonden zijn (internet nodig) voor je het eindverslag verstuurt.", storeFull: "Opslag vol – dossier kon niet bewaard worden. Verwijder foto’s en probeer opnieuw.", revisitOnce: "(Komt maar één keer in het verslag.)", sentOver: "Bestaand dossier overschreven.", prevNote: "Controleer en verstuur naar centraal.", dossiersIn: "Dossiers in {w}"
   },
   fr: {
@@ -138,6 +145,11 @@ OE.T = {
     runShortcut: "▶ Relancer le raccourci", pdfDl: "⬇ Télécharger / partager le PDF", copyAgain: "Copier à nouveau le résumé",
     allOk: "Tout correct", remarks: "Remarques", tech: "Technicien", extra: "Infos compl.", empty: "(vide)",
     single: "1 appareil", multi: "Plusieurs appareils", editing: "Vous modifiez un dossier existant.",
+    anTitle: "Annoter la photo", anLoading: "Chargement de la photo…", anCancel: "Annuler", anDone: "Terminé", anOk: "OK", anUndo: "Défaire", anClear: "Tout effacer",
+    anArrow: "Flèche", anEllipse: "Cercle / ellipse", anRect: "Rectangle", anPen: "Dessin libre", anDim: "Cote", anText: "Texte",
+    anRed: "Rouge", anYellow: "Jaune", anBlue: "Bleu", anWhite: "Blanc", anBlack: "Noir", anThin: "Fin", anMid: "Moyen", anThick: "Épais",
+    anDimAsk: "Cote (p. ex. 1250 mm)", anTextAsk: "Texte",
+    descH: "Brève description (facultatif)", descPh: "p. ex. rayure en bas du vantail", descSkip: "Passer", descDone: "Terminé",
     signerH: "Signataire responsable", signerPh: "Nom du client/responsable sur place", signerNeed: "Veuillez saisir le nom du signataire.", ok: "OK", photoErr: "La photo n’a pas pu être traitée.", obxOne: "1 dossier en attente d’envoi", obxMany: "{n} dossiers en attente d’envoi", obxRetry: "Réessayer", obxOk: "Envoyé ✓", sentWait: "En attente d’envoi… (continue automatiquement)", sentDone: "Envoyé à la centrale ✓", finalOutbox: "Attention : {n} dossier(s) de cet appareil attendent encore l’envoi. Attendez qu’ils soient envoyés (internet requis) avant d’envoyer le rapport final.", storeFull: "Mémoire pleine – le dossier n’a pas pu être enregistré. Supprimez des photos et réessayez.", revisitOnce: "(N’apparaît qu’une seule fois dans le rapport.)", sentOver: "Dossier existant remplacé.", prevNote: "Vérifiez puis envoyez à la centrale.", dossiersIn: "Dossiers dans {w}"
   }
 };
@@ -161,7 +173,7 @@ OE.HELP = {
     tech: ["Vul je voornaam en achternaam in; je initialen worden er automatisch uit afgeleid. Je naam staat op elk dossier.", "• Stap 1 – Installeer de opdracht ‘Onderhoud_Entretien’ in de app Opdrachten (Shortcuts).", "• Stap 2 – Start: bewaart je naam en start de opdracht één keer om de mappen Rapport/Onderhoud_Entretien in iCloud Drive aan te maken.", "• Wijzigen kan later via ‘⚙ Instellingen technieker’."],
     mode: ["• 1 toestel: één dossier in deze werkorder.", "• Meerdere toestellen: meerdere dossiers (één per toestel) in dezelfde werkorder.", "Via ‘⚙ Instellingen technieker’ pas je je naam aan of installeer/start je de opdracht opnieuw."],
     wo: ["• Bestaande werkorder: zoek op (een deel van) het WO-nummer en tik het aan in de lijst. ‘↻ Vernieuwen’ laadt de lijst opnieuw.", "• Nieuwe werkorder: vul het nummer in na het vaste voorvoegsel WO-.", "• Alle tekens zijn toegelaten; spaties worden _ .", "• Dossiernummer: plak het dossiernummer uit ServiceMax (verplicht, max. 100 tekens). Een bestaand dossiernummer wordt overschreven."],
-    q: ["Het verslag bevat 8 stellingen; standaard staat elke stelling op ‘Juist’.", "• Tik ‘Niet juist’ als het niet klopt: dan vraagt de app een beschrijving of toont ze een vaste tekst.", "• Stelling 1 (schade bij aankomst) op ‘Niet juist’: minstens 1 foto is verplicht.", "• Met Terug / Volgende ga je door de stellingen."],
+    q: ["Het verslag bevat 8 stellingen; standaard staat elke stelling op ‘Juist’.", "• Tik ‘Niet juist’ als het niet klopt: dan vraagt de app een beschrijving of toont ze een vaste tekst.", "• Stelling 1 (schade bij aankomst) op ‘Niet juist’: minstens 1 foto is verplicht.", "• Na elke foto opent een tekenscherm: pijl, cirkel, rechthoek, vrij tekenen, maatlijn (met maat, bv. 1250 mm) en tekst; 5 kleuren en 3 diktes. ↶ maakt ongedaan, 🗑 wist alles. ‘Annuleren’ voegt de foto niet toe, ‘Klaar’ wel.", "• Daarna kun je een korte beschrijving (optioneel, max. 150 tekens) toevoegen; die komt, automatisch vertaald, onder de foto in de PDF. Alleen de bewerkte foto wordt bewaard; achteraf bewerken kan niet (wel verwijderen met ×).", "• Met Terug / Volgende ga je door de stellingen."],
     extra: ["Optioneel: noteer hier extra informatie voor dit dossier.", "Tik daarna op ‘Verstuur dossier’ om het voorbeeld te zien."],
     preview: ["Controleer het dossier en de automatische vertaling. Met ‘Bewerken’ of Terug pas je iets aan.", "• ‘Verstuur naar centraal’: het dossier gaat in de wachtrij (outbox) en wordt op de achtergrond verstuurd, ook als het internet even wegvalt.", "• Na het versturen opent ServiceMax Go."],
     sent: ["• Nieuw dossier: volgend toestel in dezelfde werkorder (WO blijft behouden).", "• Eindverslag WO: maakt het eindverslag van alle dossiers in deze WO.", "• Sluiten app: zet de app terug op de start en opent ServiceMax Go.", "Zolang ‘Wacht op verzending’ staat, is het dossier nog niet verzonden (internet nodig)."],
@@ -173,7 +185,7 @@ OE.HELP = {
     tech: ["Saisissez votre prénom et votre nom ; vos initiales en sont déduites automatiquement. Votre nom figure sur chaque dossier.", "• Étape 1 – Installez le raccourci « Onderhoud_Entretien » dans l’app Raccourcis.", "• Étape 2 – Démarrer : enregistre votre nom et lance une fois le raccourci pour créer les dossiers Rapport/Onderhoud_Entretien dans iCloud Drive.", "• Vous pouvez modifier cela plus tard via « ⚙ Paramètres technicien »."],
     mode: ["• 1 appareil : un seul dossier dans cet ordre de travail.", "• Plusieurs appareils : plusieurs dossiers (un par appareil) dans le même ordre de travail.", "Via « ⚙ Paramètres technicien », vous modifiez votre nom ou réinstallez/relancez le raccourci."],
     wo: ["• Ordre de travail existant : recherchez (une partie du) numéro WO et touchez-le dans la liste. « ↻ Actualiser » recharge la liste.", "• Nouvel ordre de travail : saisissez le numéro après le préfixe fixe WO-.", "• Tous les caractères sont autorisés ; les espaces deviennent _ .", "• Numéro de dossier : collez le numéro de dossier de ServiceMax (obligatoire, 100 caractères max.). Un numéro de dossier existant est écrasé."],
-    q: ["Le rapport contient 8 énoncés ; par défaut, chacun est sur « Correct ».", "• Touchez « Incorrect » si ce n’est pas le cas : l’application demande alors une description ou affiche un texte fixe.", "• Énoncé 1 (dommages à l’arrivée) sur « Incorrect » : au moins 1 photo est obligatoire.", "• Retour / Suivant permettent de parcourir les énoncés."],
+    q: ["Le rapport contient 8 énoncés ; par défaut, chacun est sur « Correct ».", "• Touchez « Incorrect » si ce n’est pas le cas : l’application demande alors une description ou affiche un texte fixe.", "• Énoncé 1 (dommages à l’arrivée) sur « Incorrect » : au moins 1 photo est obligatoire.", "• Après chaque photo, un écran de dessin s’ouvre : flèche, cercle, rectangle, dessin libre, cote (avec mesure, p. ex. 1250 mm) et texte ; 5 couleurs et 3 épaisseurs. ↶ défait, 🗑 efface tout. « Annuler » n’ajoute pas la photo, « Terminé » l’ajoute.", "• Vous pouvez ensuite ajouter une brève description (facultatif, 150 caractères max.) ; elle figure, traduite automatiquement, sous la photo dans le PDF. Seule la photo annotée est conservée ; elle ne peut plus être modifiée ensuite (mais bien supprimée avec ×).", "• Retour / Suivant permettent de parcourir les énoncés."],
     extra: ["Facultatif : notez ici des informations supplémentaires pour ce dossier.", "Touchez ensuite « Envoyer le dossier » pour voir l’aperçu."],
     preview: ["Vérifiez le dossier et la traduction automatique. Avec « Modifier » ou Retour, vous corrigez quelque chose.", "• « Envoyer à la centrale » : le dossier est placé dans la file d’attente (outbox) et envoyé en arrière-plan, même si Internet est momentanément coupé.", "• Après l’envoi, ServiceMax Go s’ouvre."],
     sent: ["• Nouveau dossier : appareil suivant dans le même ordre de travail (le WO est conservé).", "• Rapport final WO : établit le rapport final de tous les dossiers de ce WO.", "• Fermer l’app : remet l’application au début et ouvre ServiceMax Go.", "Tant que « En attente d’envoi » est affiché, le dossier n’est pas encore envoyé (Internet requis)."],

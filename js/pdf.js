@@ -86,19 +86,29 @@
         } else ex.push(para(P.none, M + 5, CW - 5, "normal", 10, C.li));
         y += 2; need(lh(10.5) + Math.min(hOf(ex[0]) + (ex[1] ? hOf(ex[1]) : 0), 40));
         draw(para(P.extra, M, CW, "bold", 10.5, C.tx)); ex.forEach(draw);
-        // ---- photos: max 2 per row, aspect kept, max 85 mm high, never split ----
-        var names = [];
-        d.answers.forEach(function (a) { if (!a.ok) (a.photos || []).forEach(function (n) { names.push(n); }); });
+        // ---- photos: max 2 per row, aspect kept, max 85 mm high, never split; optional description under each
+        //      photo as "NL: … / FR: …" (translated side italic + disclaimer, same style as the other free texts) ----
+        var names = [], caps = {};
+        d.answers.forEach(function (a, ai) { if (!a.ok) (a.photos || []).forEach(function (n) { names.push(n); caps[n] = ai; }); });
         if (names.length) {
           var GAP = 6, colW = (CW - GAP) / 2, MAXH = 85, CAP = 4.5;
+          var capOf = function (n) { // -> [para…] below the file name (x filled in when drawn)
+            var dn = OE.photoDescText(d, caps[n], n, "nl"), df = OE.photoDescText(d, caps[n], n, "fr"), out = [];
+            if (!dn.t.trim()) return out;
+            out.push(para("NL: " + dn.t, 0, colW, dn.tr ? "italic" : "normal", 8.5, dn.tr ? C.tr : C.tx));
+            out.push(para("FR: " + df.t, 0, colW, df.tr ? "italic" : "normal", 8.5, df.tr ? C.tr : C.tx));
+            if (dn.tr || df.tr) out.push(para("(" + OE.DISC + ")", 0, colW, "italic", 6.5, C.li));
+            return out;
+          };
           var rows = []; for (var k = 0; k < names.length; k += 2) rows.push(names.slice(k, k + 2));
           rows.forEach(function (row, ri) {
             var dims = row.map(function (n) { var im = imgs[n]; if (!im) return { w: colW, h: 12 };
               var s = Math.min(colW / im.w, MAXH / im.h); return { w: im.w * s, h: im.h * s }; });
+            var cps = row.map(capOf), capH = CAP + Math.max.apply(null, cps.map(function (c) { return c.reduce(function (a, q) { return a + hOf(q); }, 0) + (c.length ? 1 : 0); }));
             var hd = ri === 0 ? lh(10.5) + 4 : 0, mh = Math.max.apply(null, dims.map(function (z) { return z.h; }));
-            var avail = BOT - y - hd - CAP - 3;
+            var avail = BOT - y - hd - capH - 3;
             if (mh > avail && avail >= 50) { var f = avail / mh; dims.forEach(function (z) { z.w *= f; z.h *= f; }); mh = avail; } // shrink a bit rather than leave a big gap
-            var rh = mh + CAP + 3;
+            var rh = mh + capH + 3;
             y += ri === 0 ? 4 : 0;
             need(rh + (ri === 0 ? lh(10.5) : 0));
             if (ri === 0) draw(para(P.photos, M, CW, "bold", 10.5, C.tx));
@@ -107,6 +117,8 @@
               if (im) { doc.addImage(im.data, "JPEG", x, y, z.w, z.h, n, "FAST"); doc.setDrawColor(226, 232, 240); doc.rect(x, y, z.w, z.h); }
               else { font("italic", 9, C.nok); doc.text(clean("[foto niet beschikbaar / photo indisponible]"), x, y + 6); }
               font("normal", 7.5, C.mu); doc.text(doc.splitTextToSize(clean(n), colW)[0], x, y + z.h + 3.5);
+              var cy = y + z.h + CAP + 0.8;
+              cps[j].forEach(function (q) { var l = lh(q.sz); font(q.st, q.sz, q.col); q.ls.forEach(function (ln) { doc.text(ln, x, cy + l * 0.75); cy += l; }); });
             });
             y += rh;
           });
