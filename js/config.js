@@ -67,11 +67,13 @@ OE.SUMMARY = {
   nl: { ok: "Bij onderstaande toestellen werd een succesvol onderhoud uitgevoerd, waar geen mechanische- of electronische storingen werden vastgesteld en ook geen onderdelen vervangen werden.",
         rem: "Bij bovenstaande toestellen werden opmerkingen genoteerd en/of onderdelen vervangen. Alle details staan in het uitgebreide onderhoudsverslag (PDF), dat op aanvraag kan worden toegestuurd.",
         link: "Volledig verslag downloaden (30 dagen geldig): {url}",
-        signer: "Ondertekenaar: {s}" },
+        signer: "Ondertekenaar: {s}",
+        count: "Aantal toestellen: {n}" },
   fr: { ok: "Pour les appareils ci-dessous, un entretien a été effectué avec succès : aucune panne mécanique ou électronique n’a été constatée et aucune pièce n’a été remplacée.",
         rem: "Pour les appareils ci-dessus, des remarques ont été notées et/ou des pièces ont été remplacées. Tous les détails figurent dans le rapport d’entretien détaillé (PDF), disponible sur demande.",
         link: "Télécharger le rapport complet (valable 30 jours) : {url}",
-        signer: "Signataire : {s}" }
+        signer: "Signataire : {s}",
+        count: "Nombre d’appareils : {n}" }
 };
 
 OE.DISC = "Automatische vertaling – gelieve na te kijken / Traduction automatique – veuillez vérifier";

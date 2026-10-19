@@ -7,7 +7,7 @@
     var ok = dossiers.filter(function (d) { return !OE.hasRemarks(d); }).map(function (d) { return d.dossier; });
     var rem = dossiers.filter(function (d) { return OE.hasRemarks(d); }).map(function (d) { return d.dossier; });
     function block(L) {
-      var parts = [];
+      var parts = [OE.fmt(OE.SUMMARY[L].count, { n: dossiers.length })];
       if (ok.length) parts.push(OE.SUMMARY[L].ok + "\n" + ok.join(" | "));
       if (ok.length && rem.length) parts.push(OE.CFG.UNDERSCORES);
       if (rem.length) parts.push(rem.join(" | ") + "\n" + OE.SUMMARY[L].rem);
