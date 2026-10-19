@@ -37,7 +37,7 @@
             // remove only this exact entry (a newer resubmit of the same dossier stays queued)
             store(load().filter(function (c) { return !(c.wo === e.wo && c.dossier === e.dossier && c.at === e.at); }));
             OE.outbox.lastOk = Date.now();
-            var S = OE.S; if (S.lastSent && S.lastSent.wo === e.wo && S.lastSent.dossier === e.dossier) { S.lastSent.over = !!(r && r.overwritten); S.lastSent.done = true; OE.save(); }
+            var S = OE.S; if (S.lastSent && S.lastSent.wo === e.wo && S.lastSent.dossier === e.dossier) { S.lastSent.over = !!(r && r.overwritten); S.lastSent.stale = !!(r && r.staleFinal); S.lastSent.done = true; OE.save(); }
             if (OE.mem) OE.mem.final = OE.S.screen === "final" ? OE.mem.final : null;
           }, function (err) {
             e.tries++; OE.outbox.lastErr = String(err && err.message || err);

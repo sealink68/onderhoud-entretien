@@ -88,8 +88,14 @@
   }
   function drawWOList() {
     var S = OE.S, x = OE.t(), el = $("wol"); if (!el) return;
-    if (!mem.woList) { el.innerHTML = '<div class="load"><div class="spin"></div>' + x.woLoading + "</div>"; return; }
     var err = mem.woErr ? '<div class="err">' + x.woErr + "</div>" : "";
+    var exists = S.woIsNew && woExists();
+    if (!mem.woShow && !exists && !(S.wo && !S.woIsNew)) {
+      el.innerHTML = err + '<button type="button" class="btn sec wosrch" id="wosb">' + x.woSearchBtn + "</button>";
+      OE.bind("wosb", function () { mem.woShow = true; drawWOList(); var q = $("woq"); if (q) q.focus(); });
+      return;
+    }
+    if (!mem.woList) { el.innerHTML = '<div class="load"><div class="spin"></div>' + x.woLoading + "</div>"; return; }
     if (S.wo && !S.woIsNew && !mem.woOpen) {
       var cur = woAll().filter(function (w) { return w.wo === S.wo; })[0] || { wo: S.wo };
       el.innerHTML = err + '<div class="wosel" id="wosel" data-wo="' + esc(S.wo) + '"><span>✓ <b>' + esc(S.wo) + "</b><small>" + esc(woMeta(cur, x)) + "</small></span>" +
@@ -97,8 +103,11 @@
       OE.bind("woch", function () { mem.woOpen = true; drawWOList(); var q = $("woq"); if (q) q.focus(); });
       return;
     }
-    el.innerHTML = err + '<input id="woq" type="search" inputmode="search" autocomplete="off" autocapitalize="characters" placeholder="' + esc(x.woSearch) + '">' +
-      '<div class="wolist" id="wolist" role="listbox"></div><button class="small" id="rl" style="margin:0">' + x.woReload + "</button>";
+    if (exists) mem.woQ = OE.CFG.WO_PREFIX + OE.normId(S.woNewTxt).replace(/^WO-/i, "");
+    el.innerHTML = err + (exists ? '<div class="err" id="woexists">ℹ️ ' + esc(x.woExistsHint) + "</div>" : "") + '<input id="woq" type="search" inputmode="search" autocomplete="off" autocapitalize="characters" placeholder="' + esc(x.woSearch) + '">' +
+      '<div class="wolist" id="wolist" role="listbox"></div><button class="small" id="rl" style="margin:0">' + x.woReload + "</button>" +
+      (exists ? "" : '<button class="small" id="woh" style="margin:0 0 0 8px">' + x.woSearchHide + "</button>");
+    OE.bind("woh", function () { mem.woShow = false; mem.woQ = ""; drawWOList(); });
     var q = $("woq"); q.value = mem.woQ || "";
     q.oninput = function () { mem.woQ = q.value; drawItems(); };
     q.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); var f = $("wolist").querySelector("[data-wo]"); if (f) f.click(); } };
@@ -115,8 +124,12 @@
       return '<button type="button" role="option" aria-selected="' + on + '" data-wo="' + esc(w.wo) + '" class="' + (on ? "on" : "") + '"><b>' + esc(w.wo) + "</b><small>" + esc(woMeta(w, x)) + "</small></button>";
     }).join("");
     [].forEach.call(box.querySelectorAll("[data-wo]"), function (b) {
-      b.onclick = function () { S.wo = b.dataset.wo; S.woIsNew = false; S.woNewTxt = ""; $("won").value = ""; mem.woOpen = false; mem.woQ = ""; OE.save(); drawWOList(); finalBtn(); };
+      b.onclick = function () { mem.woShow = false; S.wo = b.dataset.wo; S.woIsNew = false; S.woNewTxt = ""; $("won").value = ""; mem.woOpen = false; mem.woQ = ""; OE.save(); drawWOList(); finalBtn(); };
     });
+  }
+  function woExists() {
+    var w = (OE.CFG.WO_PREFIX + OE.normId(OE.S.woNewTxt || "").replace(/^WO-/i, "")).toUpperCase();
+    return (mem.woList || []).some(function (z) { return z.wo.toUpperCase() === w; });
   }
   function finalBtn() { var b = $("fin"); if (b) b.style.display = OE.S.wo && !OE.S.woIsNew ? "" : "none"; }
   SC.wo = function () {
@@ -314,6 +327,7 @@
     var S = OE.S, x = OE.t(), ls = S.lastSent || { wo: S.wo, dossier: S.dossier };
     $("card").innerHTML = '<div class="check">✓</div><h2 class="q center">' + x.sentH + '</h2><p class="center hint">' + esc(OE.fmt(x.sentP, { d: ls.dossier, w: ls.wo })) + "</p>" +
       '<p class="center" id="sst">' + (OE.outbox.isPending(ls.wo, ls.dossier) ? '<span class="badge r">⏳ ' + x.sentWait + "</span>" : '<span class="badge g">' + x.sentDone + "</span>" + (ls.over ? '<br><small class="hint">' + x.sentOver + "</small>" : "")) + "</p>" +
+      (ls.stale ? '<div class="err" id="sentstale">⚠️ ' + esc(x.sentStale) + "</div>" : "") +
       '<div class="stack"><button class="btn pri" id="nd">＋ ' + x.newDossier + '</button><button class="btn sec" id="fin">📄 ' + x.finalBtn + '</button><button class="btn sec" id="cl">' + x.closeApp + "</button></div>";
     OE.bind("nd", function () { var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false; OE.go("wo"); });
     OE.bind("cl", OE.closeApp);
@@ -357,6 +371,8 @@
     if (nOut) html += '<div class="err" id="obxwarn">⚠️ ' + esc(OE.fmt(x.finalOutbox, { n: nOut })) + "</div>";
     if (mem.finalErr || !w || w === "loading" || !w.dossiers.length) {}
     else html += '<p class="hint" style="margin:0">' + esc(OE.fmt(x.dossiersIn, { w: S.wo })) + ": " + w.dossiers.length + "</p>" +
+      '<p class="okmsg" id="fincount" style="margin:6px 0">' + esc(OE.fmt(x.finalCount, { n: w.dossiers.length })) + "</p>" +
+      (finalStale(w) ? '<div class="err" id="finstale">⚠️ ' + esc(x.finalStale) + "</div>" : "") +
       w.dossiers.map(function (d) { return dossierCard(d, S.lang, { all: false, edit: true }); }).join("");
     html += '<div id="err"></div><div id="msg">' + (mem.finalMsg || "") + "</div>" +
       '<div class="btns"><button class="btn sec" id="bk">‹ ' + x.back + '</button><button class="btn ok" id="snd"' + (w && w.dossiers && w.dossiers.length ? "" : " disabled") + ">" + x.finalSend + "</button></div>" +
@@ -369,6 +385,21 @@
     [].forEach.call($("card").querySelectorAll("[data-edit]"), function (b) { b.onclick = function () { editDossier(b.dataset.edit); }; });
     // send -> signer popup (mandatory, prefilled) -> confirm popup -> generate (copy happens in the confirm tap)
     OE.bind("snd", function () {
+      // Always re-read the server state first: another technician may have sent a door meanwhile.
+      var old = mem.final, b = $("snd"); b.disabled = true;
+      $("msg").innerHTML = '<div class="load"><div class="spin"></div>' + x.finalChecking + "</div>";
+      OE.api.getWO(S.wo).then(function (w) {
+        b.disabled = false; $("msg").innerHTML = "";
+        if (sig(w) !== sig(old)) {
+          if (old && old.signer && !w.signer) w.signer = old.signer;
+          mem.final = w; mem.summary = OE.buildSummary(w.dossiers, w.wo, w.signer || ""); mem.pdf = w.dossiers.length ? buildFinalPdf(w) : null;
+          mem.finalMsg = '<div class="err" id="finchanged">⚠️ ' + esc(OE.fmt(x.finalChanged, { n: w.dossiers.length })) + "</div>";
+          OE.render(1); return;
+        }
+        mem.final.pdfAt = w.pdfAt; askSign();
+      }, function (e) { b.disabled = false; $("msg").innerHTML = '<div class="err">' + esc(x.sendErr + " (" + (e && e.message || e) + ")") + "</div>"; });
+    });
+    function askSign() {
       OE.promptModal(x.signerH, x.signerPh, (mem.final && mem.final.signer) || "", x.signerNeed, function (signer) {
         var w = mem.final;
         if (w.signer !== signer) { w.signer = signer; mem.pdf = buildFinalPdf(w); } // rebuild with the signer
@@ -376,11 +407,13 @@
         mem.summary = OE.buildSummary(w.dossiers, w.wo, signer);
         mem.signerSave = OE.api.setSigner(w.wo, signer);
         var n = OE.outbox.pending(S.wo).length;
-        OE.confirmModal((n ? OE.fmt(x.finalOutbox, { n: n }) + "\n\n" : "") + x.finalConfirm, sendFinal);
+        OE.confirmModal(OE.fmt(x.finalCount, { n: w.dossiers.length }) + "\n\n" + (n ? OE.fmt(x.finalOutbox, { n: n }) + "\n\n" : "") + x.finalConfirm, sendFinal);
       });
-    });
+    }
     bindFinalMsg();
   };
+  function sig(w) { return w && w.dossiers ? w.dossiers.map(function (d) { return d.dossier + "@" + (d.receivedAt || 0); }).sort().join("|") : ""; }
+  function finalStale(w) { return !!(w && w.pdfAt && w.dossiers.some(function (d) { return (d.firstReceivedAt || d.receivedAt || 0) > w.pdfAt; })); }
   function bindFinalMsg() {
     OE.bind("rsc", function () { OE.copyText(mem.summary); OE.runShortcut(OE.S.wo); });
     OE.bind("pdl", function () { if (mem.pdfBlob) OE.shareOrDownload(mem.pdfBlob, OE.safeFile("OC_" + OE.S.wo + ".pdf")); });
@@ -394,7 +427,9 @@
     $("msg").innerHTML = '<div class="load"><div class="spin"></div>' + x.pdfBusy + "</div>";
     // A) PDF -> upload -> Shortcut
     Promise.all([mem.pdf || (mem.pdf = buildFinalPdf(w)), mem.signerSave]).then(function (r) { return OE.api.putPdf(wo, r[0]); })
-      .then(function () {
+      .then(function (pr) {
+        if (mem.final && mem.final.dossiers) mem.final.pdfAt = (pr && pr.pdfAt) || Date.now();
+        var st = $("finstale"); if (st) st.remove();
         return copied.then(function (ok) {
           mem.finalMsg = '<div class="okmsg" id="pdfok">✓ ' + esc(x.pdfOk) + "</div>" + (ok ? "" : '<div class="err">' + esc(x.copyFail) + "</div>") +
             '<div class="stack"><button class="btn sec" id="rsc">' + x.runShortcut + '</button><button class="btn sec" id="pdl">' + x.pdfDl + '</button><button class="btn sec" id="cpy">' + x.copyAgain + "</button></div>";
