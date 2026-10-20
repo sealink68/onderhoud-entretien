@@ -289,46 +289,69 @@
     var S = OE.S, x = OE.t(), d = OE.draftDossier();
     $("card").innerHTML = '<h2 class="q" style="margin-bottom:6px">' + x.prevH + '</h2><p class="hint" style="margin:0 0 6px">' + esc(S.wo) + " · " + esc(d.tech.first + " " + d.tech.last) + (S.editing ? " · " + x.editing : "") + "</p>" +
       '<div id="pv"><div class="load"><div class="spin"></div>' + x.translating + "</div></div><div id=\"rep\"></div><div id=\"err\"></div>" +
-      '<div class="btns"><button class="btn sec" id="bk">‹ ' + x.back + '</button><button class="btn sec" id="sr">' + (mem.showRep ? x.hideReport : x.showReport) + "</button></div>" +
-      '<div class="btns"><button class="btn ok" id="snd" disabled>' + x.sendCentral + "</button></div>";
+      '<button class="small" id="sr">' + (mem.showRep ? x.hideReport : x.showReport) + "</button>" +
+      (S.editing
+        ? '<div class="btns"><button class="btn sec" id="bk">‹ ' + x.back + '</button><button class="btn ok" id="pvf" disabled>💾 ' + x.saveToFinal + "</button></div>"
+        : '<div class="btns"><button class="btn sec" id="bk">‹ ' + x.back + '</button><button class="btn ok" id="snd" disabled>✓ ' + x.sendInterim + "</button></div>" +
+          '<div class="btns"><button class="btn pri" id="pvf" disabled>📄 ' + x.finalBtn + "</button></div>") +
+      '<button class="lnk" id="cl">' + x.closeApp + "</button>";
     OE.bind("bk", function () { OE.go("extra", -1); });
     OE.bind("sr", function () { mem.showRep = !mem.showRep; OE.render(1); });
+    OE.bind("cl", OE.closeApp);
+    function en(v) { ["snd", "pvf"].forEach(function (id) { var b = $(id); if (b) b.disabled = !v; }); }
     function draw(force) {
-      $("snd").disabled = true;
+      en(false);
       ensureTr(d, force).then(function (tr) {
         if (S.screen !== "preview") return;
         withTr(d);
         $("pv").innerHTML = dossierCard(d, S.lang, { all: true, tr: true }) + (tr.fail ? '<div class="err" id="trerr">⚠️ ' + x.trerr + '</div><button class="small" id="retr">' + x.retr + "</button>" : "");
         if (mem.showRep) $("rep").innerHTML = '<pre id="out">' + esc(OE.dossierText(d)) + "</pre>";
         OE.bind("retr", function () { draw(true); });
-        $("snd").disabled = false;
+        en(true);
       });
     }
     draw(false);
-    OE.bind("snd", function () {
-      // Queue in the persistent outbox, open ServiceMax Go inside this tap (iOS), upload in the background.
+    // Queue the door in the persistent outbox (survives reloads / no network). Returns false when storage is full.
+    function queue() {
       var d = withTr(OE.draftDossier()), photos = [];
       S.answers.forEach(function (a) { a.photos.forEach(function (p) { if (!p.up && p.data) photos.push({ name: p.name, data: p.data, up: false }); }); });
-      try { OE.outbox.add(d, photos); } catch (e) { OE.err(x.storeFull); return; }
+      try { OE.outbox.add(d, photos); } catch (e) { OE.err(x.storeFull); return false; }
       S.lastSent = { wo: S.wo, dossier: S.dossier, over: false, done: false };
+      mem.recent = (mem.recent || []).filter(function (r) { return !(r.wo === S.wo && r.dn === S.dossier); }).concat([{ wo: S.wo, dn: S.dossier, d: JSON.parse(JSON.stringify(d)), at: Date.now() }]);
       S.answers.forEach(function (a) { a.photos.forEach(function (p) { if (p.data) { delete p.data; p.up = true; } }); }); // data now lives in the outbox
+      return true;
+    }
+    // Verstuur tussenverslag: queue, open ServiceMax Go inside this tap (iOS), upload in the background.
+    OE.bind("snd", function () {
+      if (!queue()) return;
       mem.final = null; S.screen = "sent"; OE.save(); OE.render(1);
       OE.openGo();
       OE.outbox.flush();
     });
+    // Preview eindverslag / Opslaan › eindverslag: the door is queued FIRST (so it can't be lost), the draft is closed,
+    // and the final screen waits for the outbox before reading the server.
+    OE.bind("pvf", function () {
+      if (!queue()) return;
+      var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false;
+      mem.final = null; OE.save(); OE.outbox.flush(); OE.go("final");
+    });
   };
 
   /* ---------- 7. after sending ---------- */
+  // Exception only (small grey link): leave without saving/sending the current draft. Already queued doors keep uploading.
   OE.closeApp = function () {
-    var S = OE.S; OE.blankDraft(S); S.wo = ""; S.woIsNew = false; S.woNewTxt = ""; S.screen = "mode"; mem.final = null; mem.woList = null;
-    OE.save(); OE.render(1); OE.openGo();
+    OE.confirmModal(OE.t().closeAsk, function () {
+      var S = OE.S; OE.blankDraft(S); S.wo = ""; S.woIsNew = false; S.woNewTxt = ""; S.screen = "mode"; S.lastSent = null; mem.final = null; mem.woList = null;
+      OE.save(); OE.render(1);
+    });
   };
   SC.sent = function () {
     var S = OE.S, x = OE.t(), ls = S.lastSent || { wo: S.wo, dossier: S.dossier };
     $("card").innerHTML = '<div class="check">✓</div><h2 class="q center">' + x.sentH + '</h2><p class="center hint">' + esc(OE.fmt(x.sentP, { d: ls.dossier, w: ls.wo })) + "</p>" +
       '<p class="center" id="sst">' + (OE.outbox.isPending(ls.wo, ls.dossier) ? '<span class="badge r">⏳ ' + x.sentWait + "</span>" : '<span class="badge g">' + x.sentDone + "</span>" + (ls.over ? '<br><small class="hint">' + x.sentOver + "</small>" : "")) + "</p>" +
       (ls.stale ? '<div class="err" id="sentstale">⚠️ ' + esc(x.sentStale) + "</div>" : "") +
-      '<div class="stack"><button class="btn pri" id="nd">＋ ' + x.newDossier + '</button><button class="btn sec" id="fin">📄 ' + x.finalBtn + '</button><button class="btn sec" id="cl">' + x.closeApp + "</button></div>";
+      '<div class="stack"><button class="btn pri" id="nd">＋ ' + x.newDossier + '</button><button class="btn sec" id="fin">📄 ' + x.finalBtn + "</button></div>" +
+      '<button class="lnk" id="cl">' + x.closeApp + "</button>";
     OE.bind("nd", function () { var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false; OE.go("wo"); });
     OE.bind("cl", OE.closeApp);
     OE.bind("fin", function () { mem.final = null; OE.go("final"); });
@@ -336,13 +359,42 @@
 
   /* ---------- 8. Eindverslag WO ---------- */
   function loadFinal() {
-    var S = OE.S, wo = S.wo; mem.final = "loading"; mem.finalErr = ""; mem.pdf = null; mem.pdfBlob = null; mem.finalMsg = "";
-    OE.api.getWO(wo).then(function (w) {
+    var S = OE.S, wo = S.wo; mem.final = "loading"; mem.finalErr = ""; mem.pdf = null; mem.pdfBlob = null; mem.finalMsg = ""; mem.lastPend = OE.outbox.pending(wo).length;
+    if (mem.finalWo !== wo) { mem.finalWo = wo; mem.allIn = false; mem.sgn = null; }
+    waitOutbox(wo, 8).then(function () { return getWOFresh(wo); }).then(function (w) {
       mem.final = w; mem.summary = OE.buildSummary(w.dossiers, w.wo, w.signer || "");
       // Pre-build the PDF while the user reviews, so the send tap only has to upload it.
       if (w.dossiers.length) mem.pdf = buildFinalPdf(w);
     }, function (e) { mem.final = null; mem.finalErr = String(e && e.message || e); })
       .then(function () { if (S.screen === "final" && S.wo === wo) OE.render(1); });
+  }
+  // Wait (max ~n s) until this device's queued doors of this WO are on the server.
+  function waitOutbox(wo, n) {
+    if (!OE.outbox.pending(wo).length || n <= 0) return Promise.resolve();
+    return OE.outbox.flush().then(function () {
+      if (!OE.outbox.pending(wo).length) return;
+      return new Promise(function (res) { setTimeout(res, 1000); }).then(function () { return waitOutbox(wo, n - 1); });
+    });
+  }
+  // GET /wo + the doors this device just sent (the server's door list can lag up to ~1 min after a PUT).
+  function getWOFresh(wo) {
+    return OE.api.getWO(wo).then(function (w) {
+      var rec = (mem.recent || []).filter(function (r) { return r.wo === wo && Date.now() - r.at < 180000; });
+      var miss = rec.filter(function (r) { return !w.dossiers.some(function (d) { return d.dossier === r.dn; }); });
+      return Promise.all(miss.map(function (r) { return OE.api.getDossier(wo, r.dn).catch(function () { return null; }); })).then(function (ds) {
+        ds.forEach(function (d) { if (d) w.dossiers.push(d); });
+        // A door sent/edited on this device in the last 3 min: if the server copy is missing or older, show the local copy.
+        rec.forEach(function (r) {
+          var k = -1; w.dossiers.forEach(function (d, i) { if (d.dossier === r.dn) k = i; });
+          var srv = k >= 0 ? w.dossiers[k] : null;
+          if (!srv || (srv.receivedAt || 0) < r.at - 120000 || OE.outbox.isPending(wo, r.dn)) {
+            var loc = JSON.parse(JSON.stringify(r.d)); loc._local = true; loc.receivedAt = srv ? srv.receivedAt : 0; loc.firstReceivedAt = srv ? srv.firstReceivedAt : r.at;
+            if (k >= 0) w.dossiers[k] = loc; else w.dossiers.push(loc);
+          }
+        });
+        return w;
+      });
+    });
   }
   function fillTr(w) {
     // Dossiers without (good) translation are translated now.
@@ -374,10 +426,18 @@
       '<p class="okmsg" id="fincount" style="margin:6px 0">' + esc(OE.fmt(x.finalCount, { n: w.dossiers.length })) + "</p>" +
       (finalStale(w) ? '<div class="err" id="finstale">⚠️ ' + esc(x.finalStale) + "</div>" : "") +
       w.dossiers.map(function (d) { return dossierCard(d, S.lang, { all: false, edit: true }); }).join("");
+    var has = w && w !== "loading" && w.dossiers && w.dossiers.length;
+    if (has) html += '<div class="fsig"><label class="lbl" for="sgn">' + x.sgnLbl + '</label><input id="sgn" autocomplete="off" autocapitalize="words" placeholder="' + esc(x.signerPh) + '">' +
+      '<p class="hint" style="margin-top:4px">' + x.sgnHint + "</p>" +
+      '<label class="lbl">' + x.allInQ + '</label><label class="chkq" for="allin"><input type="checkbox" id="allin"' + (mem.allIn ? " checked" : "") + "><span>" + x.allInYes + "</span></label></div>";
     html += '<div id="err"></div><div id="msg">' + (mem.finalMsg || "") + "</div>" +
-      '<div class="btns"><button class="btn sec" id="bk">‹ ' + x.back + '</button><button class="btn ok" id="snd"' + (w && w.dossiers && w.dossiers.length ? "" : " disabled") + ">" + x.finalSend + "</button></div>" +
-      '<div class="btns"><button class="btn sec" id="nd">＋ ' + x.newDossier + '</button><button class="btn sec" id="cl">' + x.closeApp + "</button></div>";
+      '<div class="btns"><button class="btn sec" id="bk">‹ ' + x.back + '</button><button class="btn ok" id="snd"' + (has ? "" : " disabled") + ">" + x.finalSend + "</button></div>" +
+      '<div class="btns"><button class="btn sec" id="nd">＋ ' + x.newDossier + "</button></div>" +
+      '<button class="lnk" id="cl">' + x.closeApp + "</button>";
     $("card").innerHTML = html;
+    var sgn = $("sgn");
+    if (sgn) { sgn.value = mem.sgn != null ? mem.sgn : (w.signer || ""); sgn.oninput = function () { mem.sgn = sgn.value; }; }
+    var ai = $("allin"); if (ai) ai.onchange = function () { mem.allIn = ai.checked; };
     OE.bind("rl", function () { mem.final = null; mem.finalErr = ""; OE.render(1); });
     OE.bind("bk", function () { OE.go(S.lastSent && S.lastSent.wo === S.wo ? "sent" : "wo", -1); });
     OE.bind("nd", function () { var wo = S.wo, m = S.mode; OE.blankDraft(S); S.wo = wo; S.mode = m; S.woIsNew = false; OE.go("wo"); });
@@ -385,34 +445,38 @@
     [].forEach.call($("card").querySelectorAll("[data-edit]"), function (b) { b.onclick = function () { editDossier(b.dataset.edit); }; });
     // send -> signer popup (mandatory, prefilled) -> confirm popup -> generate (copy happens in the confirm tap)
     OE.bind("snd", function () {
+      if (!sgn || !String(sgn.value || "").trim() || sgn.value.length > 200) { OE.err(x.signerNeed); sgn && sgn.focus(); return; }
+      if (!ai.checked) { OE.err(x.allInNeed); return; }
+      $("err").innerHTML = "";
       // Always re-read the server state first: another technician may have sent a door meanwhile.
       var old = mem.final, b = $("snd"); b.disabled = true;
       $("msg").innerHTML = '<div class="load"><div class="spin"></div>' + x.finalChecking + "</div>";
-      OE.api.getWO(S.wo).then(function (w) {
+      getWOFresh(S.wo).then(function (w) {
         b.disabled = false; $("msg").innerHTML = "";
-        if (sig(w) !== sig(old)) {
+        if (!old || old === "loading" || !sameState(w, old)) {
           if (old && old.signer && !w.signer) w.signer = old.signer;
           mem.final = w; mem.summary = OE.buildSummary(w.dossiers, w.wo, w.signer || ""); mem.pdf = w.dossiers.length ? buildFinalPdf(w) : null;
           mem.finalMsg = '<div class="err" id="finchanged">⚠️ ' + esc(OE.fmt(x.finalChanged, { n: w.dossiers.length })) + "</div>";
           OE.render(1); return;
         }
-        mem.final.pdfAt = w.pdfAt; askSign();
+        mem.final.pdfAt = w.pdfAt; finish();
       }, function (e) { b.disabled = false; $("msg").innerHTML = '<div class="err">' + esc(x.sendErr + " (" + (e && e.message || e) + ")") + "</div>"; });
     });
-    function askSign() {
-      OE.promptModal(x.signerH, x.signerPh, (mem.final && mem.final.signer) || "", x.signerNeed, function (signer) {
-        var w = mem.final;
-        if (w.signer !== signer) { w.signer = signer; mem.pdf = buildFinalPdf(w); } // rebuild with the signer
-        else if (!mem.pdf) mem.pdf = buildFinalPdf(w);
-        mem.summary = OE.buildSummary(w.dossiers, w.wo, signer);
-        mem.signerSave = OE.api.setSigner(w.wo, signer);
-        var n = OE.outbox.pending(S.wo).length;
-        OE.confirmModal(OE.fmt(x.finalCount, { n: w.dossiers.length }) + "\n\n" + (n ? OE.fmt(x.finalOutbox, { n: n }) + "\n\n" : "") + x.finalConfirm, sendFinal);
-      });
+    // signer (name only) + "all reports in?" are on the page itself; then PDF -> upload -> '▶ Bewaar PDF'.
+    function finish() {
+      var w = mem.final, signer = OE.normSpace ? OE.normSpace(sgn.value) : String(sgn.value || "").replace(/\s+/g, " ").trim();
+      w.signer = signer; mem.pdf = buildFinalPdf(w);
+      mem.summary = OE.buildSummary(w.dossiers, w.wo, signer);
+      mem.signerSave = OE.api.setSigner(w.wo, signer);
+      sendFinal();
     }
     bindFinalMsg();
   };
-  function sig(w) { return w && w.dossiers ? w.dossiers.map(function (d) { return d.dossier + "@" + (d.receivedAt || 0); }).sort().join("|") : ""; }
+  function sig(w) { return w && w.dossiers ? w.dossiers.map(function (d) { return d.dossier; }).sort().join("|") : ""; }
+  function sameState(a, b) {
+    if (sig(a) !== sig(b)) return false;
+    return a.dossiers.every(function (d) { var e = b.dossiers.filter(function (z) { return z.dossier === d.dossier; })[0]; return d._local || e._local || (d.receivedAt || 0) === (e.receivedAt || 0); });
+  }
   function finalStale(w) { return !!(w && w.pdfAt && w.dossiers.some(function (d) { return (d.firstReceivedAt || d.receivedAt || 0) > w.pdfAt; })); }
   function bindFinalMsg() {
     OE.bind("rsc", function () { OE.copyText(mem.summary); OE.runShortcut(OE.S.wo); });

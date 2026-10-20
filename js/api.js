@@ -23,6 +23,7 @@
     listWOs: function () { return req("GET", "/wos").then(function (j) { return j.wos || []; }); },
     createWO: function (wo) { return req("POST", "/wo", JSON.stringify({ wo: wo })); },
     getWO: function (wo) { return req("GET", "/wo/" + E(wo)); },
+    getDossier: function (wo, dn) { return req("GET", "/wo/" + E(wo) + "/dossier/" + E(dn)); },
     putDossier: function (wo, dn, d) { return req("PUT", "/wo/" + E(wo) + "/dossier/" + E(dn), JSON.stringify(d)); },
     putPhoto: function (wo, name, blob) { return req("PUT", "/wo/" + E(wo) + "/photo/" + E(name), blob, "image/jpeg", 60000); },
     photoUrl: function (wo, name) { return base() + "/wo/" + E(wo) + "/photo/" + E(name); },

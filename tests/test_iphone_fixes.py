@@ -71,7 +71,7 @@ with sync_playwright() as p:
       pg.evaluate("s=>localStorage.setItem('oe_state_v1',JSON.stringify(s))", st(lang, "final")); pg.reload(); pg.wait_for_selector(".edit")
       es = size(pg, ".edit"); chk(all(w >= 44 and h >= 44 for w, h in es), tag + ": Bewerken/Modifier >= 44px " + str(es))
       pg.evaluate("window.__sc=[]")
-      pg.tap("#snd"); pg.wait_for_selector("#minp"); pg.fill("#minp", "Klant"); pg.tap("#mok"); pg.wait_for_selector("#myes"); pg.tap("#myes")
+      pg.fill("#sgn", "Klant"); pg.check("#allin"); pg.tap("#snd")
       pg.wait_for_selector("#pdfok", timeout=30000); pg.wait_for_timeout(500)
       chk(pg.evaluate("window.__sc.length") == 0, tag + ": shortcut NOT started automatically after async upload")
       lbl = pg.inner_text("#rsc"); chk(lbl == ("▶ Bewaar PDF (opdracht starten)" if lang == "nl" else "▶ Enregistrer le PDF (lancer le raccourci)"), tag + ": button label " + lbl)
