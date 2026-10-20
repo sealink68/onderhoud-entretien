@@ -338,11 +338,12 @@
   };
 
   /* ---------- 7. after sending ---------- */
-  // Exception only (small grey link): leave without saving/sending the current draft. Already queued doors keep uploading.
+  // Exception only (small grey link): leave without saving/sending the current draft, back to the start, and open
+  // ServiceMax Go inside the "Ja" tap (iOS). Already queued doors keep uploading.
   OE.closeApp = function () {
     OE.confirmModal(OE.t().closeAsk, function () {
       var S = OE.S; OE.blankDraft(S); S.wo = ""; S.woIsNew = false; S.woNewTxt = ""; S.screen = "mode"; S.lastSent = null; mem.final = null; mem.woList = null;
-      OE.save(); OE.render(1);
+      OE.save(); OE.render(1); OE.openGo();
     });
   };
   SC.sent = function () {
