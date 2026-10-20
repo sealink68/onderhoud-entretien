@@ -175,7 +175,7 @@
   /* ---------- 5. checklist (one statement per page) ---------- */
   function photoHtml(a) {
     return '<div class="photos">' + a.photos.map(function (p, k) {
-      return '<figure><img src="' + esc(p.data || OE.api.photoUrl(OE.S.wo, p.name)) + '" alt=""><button class="del" data-k="' + k + '" aria-label="x">×</button><figcaption>' + esc(p.name) + (p.up ? " ✓" : "") + (p.desc ? '<span class="pd">' + esc(p.desc) + "</span>" : "") + "</figcaption></figure>";
+      return '<figure><img src="' + esc(p.data || OE.api.photoUrl(OE.S.wo, p.name)) + '" alt=""><button class="del" data-k="' + k + '" type="button" aria-label="' + esc(OE.t().photoDel) + '">×</button><figcaption>' + esc(p.name) + (p.up ? " ✓" : "") + (p.desc ? '<span class="pd">' + esc(p.desc) + "</span>" : "") + "</figcaption></figure>";
     }).join("") + "</div>";
   }
   SC.q = function () {
@@ -196,7 +196,7 @@
     OE.bind("tn", function () { a.ok = false; OE.save(); OE.render(1); setTimeout(function () { var e = $("inp"); if (e) e.focus(); }, 80); });
     var inp = $("inp");
     if (inp) { inp.placeholder = q.ph[L]; inp.value = a.text; inp.oninput = function () { a.text = inp.value; OE.save(); OE.fit(inp); }; }
-    [].forEach.call($("card").querySelectorAll(".del"), function (b) { b.onclick = function () { a.photos.splice(+b.dataset.k, 1); OE.save(); OE.render(1); }; });
+    [].forEach.call($("card").querySelectorAll(".del"), function (b) { b.onclick = function () { OE.confirmModal(x.photoDelAsk, function () { a.photos.splice(+b.dataset.k, 1); OE.save(); OE.render(1); }); }; });
     ["cam", "lib"].forEach(function (id) { var f = $(id); if (f) f.onchange = function () { addPhotos(a, [].slice.call(f.files || [])); }; });
     OE.bind("bk", function () { if (i === 0) OE.go(S.editing ? "final" : "wo", -1); else { S.step--; OE.go("q", -1); } });
     OE.bind("nx", function () {
@@ -432,9 +432,11 @@
         var st = $("finstale"); if (st) st.remove();
         return copied.then(function (ok) {
           mem.finalMsg = '<div class="okmsg" id="pdfok">✓ ' + esc(x.pdfOk) + "</div>" + (ok ? "" : '<div class="err">' + esc(x.copyFail) + "</div>") +
-            '<div class="stack"><button class="btn sec" id="rsc">' + x.runShortcut + '</button><button class="btn sec" id="pdl">' + x.pdfDl + '</button><button class="btn sec" id="cpy">' + x.copyAgain + "</button></div>";
+            '<p class="hint" id="pdfnext">' + esc(x.pdfNext) + "</p>" +
+            '<div class="stack"><button class="btn pri" id="rsc">' + x.runShortcut + '</button><button class="btn sec" id="pdl">' + x.pdfDl + '</button><button class="btn sec" id="cpy">' + x.copyAgain + "</button></div>";
           if (S.screen === "final") { $("msg").innerHTML = mem.finalMsg; $("snd").disabled = false; bindFinalMsg(); }
-          OE.runShortcut(wo);
+          // No automatic OE.runShortcut here: after the async upload iOS may block it. The user taps #rsc.
+          var r = $("rsc"); if (r && r.scrollIntoView) r.scrollIntoView({ block: "center", behavior: "smooth" });
         });
       }, function (e) {
         mem.pdf = null; $("snd").disabled = false;

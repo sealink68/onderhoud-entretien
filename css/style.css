@@ -1,15 +1,16 @@
 :root{--a:#4f46e5;--b:#06b6d4;--bg:#eef2ff;--card:#fff;--tx:#0f172a;--mu:#64748b;--r:20px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%}
+html,body{margin:0;min-height:100%;overflow-x:hidden;overflow-x:clip}
 html{background:#06b6d4}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,Segoe UI,Roboto,sans-serif;color:var(--tx);
-background:linear-gradient(160deg,#4f46e5 0%,#7c3aed 45%,#06b6d4 100%) fixed;min-height:100%;
+background:transparent;min-height:100%;position:relative;
 padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 14px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 14px)}
-.app{max-width:600px;margin:0 auto;display:flex;flex-direction:column;min-height:calc(100vh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+body::before{content:"";position:fixed;top:0;right:0;bottom:0;left:0;z-index:-1;pointer-events:none;background:linear-gradient(160deg,#4f46e5 0%,#7c3aed 45%,#06b6d4 100%)}
+.app{max-width:600px;margin:0 auto;display:flex;flex-direction:column;min-height:calc(100vh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom));min-height:calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
 header{display:flex;align-items:center;justify-content:space-between;color:#fff;margin:4px 2px 14px}
 header h1{font-size:26px;margin:0;font-weight:800;letter-spacing:-.5px}
 .seg{display:flex;background:rgba(255,255,255,.2);border-radius:12px;padding:3px}
-.seg button{border:0;background:transparent;color:#fff;font-weight:700;font-size:15px;padding:8px 14px;border-radius:9px;min-height:38px;cursor:pointer}
+.seg button{border:0;background:transparent;color:#fff;font-weight:700;font-size:15px;padding:8px 14px;border-radius:9px;min-height:44px;min-width:44px;cursor:pointer}
 .seg button.on{background:#fff;color:var(--a)}
 .card{background:var(--card);border-radius:var(--r);box-shadow:0 20px 50px rgba(15,23,42,.25);padding:22px;overflow:hidden;position:relative}
 .prog{color:#fff;font-weight:600;font-size:14px;margin:0 2px 8px;display:flex;justify-content:space-between}
@@ -42,7 +43,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;font:inherit;font-size:15px;line-h
 @keyframes sp{to{transform:rotate(360deg)}}
 .check{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:44px;display:flex;align-items:center;justify-content:center;margin:10px auto 16px}
 .center{text-align:center}
-.edit{background:none;border:0;color:var(--a);font-weight:700;font-size:15px;padding:8px 0;cursor:pointer}
+.edit{background:none;border:0;color:var(--a);font-weight:700;font-size:15px;padding:8px 6px;min-height:44px;min-width:44px;cursor:pointer}
 .list{margin:0 0 6px;padding:0;list-style:none}.list li{border-bottom:1px solid #eef2f7;padding:10px 0;display:flex;justify-content:space-between;gap:10px}
 .list b{display:block;font-size:13px;color:var(--mu)}.list span{white-space:pre-wrap;word-break:break-word}
 .err{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:12px;padding:12px;margin-top:10px;font-size:14px;font-weight:600}
@@ -52,7 +53,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;font:inherit;font-size:15px;line-h
 .tip{display:flex;align-items:flex-start;gap:8px;margin:0 2px 12px;padding:10px 6px 10px 12px;background:rgba(255,255,255,.94);color:var(--tx);border-radius:14px;box-shadow:0 8px 24px rgba(15,23,42,.15);font-size:13px;line-height:1.4}
 .tip[hidden]{display:none}
 .tip p{margin:0;flex:1}
-.tip button{flex:none;border:0;background:transparent;color:var(--mu);font-size:22px;line-height:1;width:36px;height:36px;padding:0;cursor:pointer;border-radius:10px}
+.tip button{flex:none;border:0;background:transparent;color:var(--mu);font-size:22px;line-height:1;width:44px;height:44px;padding:0;cursor:pointer;border-radius:10px}
 a.btn{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none}
 /* ---- Onderhoud_Entretien additions ---- */
 h1#title{font-size:22px}
@@ -66,7 +67,7 @@ h1#title{font-size:22px}
 .photos figure{margin:0;position:relative;width:96px}
 .photos img{width:96px;height:96px;object-fit:cover;border-radius:10px;display:block;background:#e2e8f0}
 .photos figcaption{font-size:10px;color:var(--mu);word-break:break-all}
-.photos .del{position:absolute;top:2px;right:2px;border:0;background:rgba(15,23,42,.7);color:#fff;border-radius:50%;width:26px;height:26px;cursor:pointer}
+.photos .del{position:absolute;top:2px;right:2px;border:0;background:rgba(15,23,42,.7);color:#fff;border-radius:50%;width:44px;height:44px;font-size:22px;line-height:1;padding:0;cursor:pointer}
 .file{display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
 .file input{display:none}
 .opt{display:flex;flex-direction:column;gap:8px;max-height:40vh;overflow:auto;margin-bottom:6px}
@@ -76,7 +77,7 @@ h1#title{font-size:22px}
 .pre{display:flex;align-items:stretch}
 .pre span{display:flex;align-items:center;padding:0 12px;background:#e2e8f0;border-radius:14px 0 0 14px;font-weight:800}
 .pre input{border-radius:0 14px 14px 0}
-.small{font-size:13px;background:none;border:0;color:var(--a);font-weight:700;cursor:pointer;padding:10px 0;display:block;margin:10px auto 0}
+.small{font-size:13px;background:none;border:0;color:var(--a);font-weight:700;cursor:pointer;padding:10px 8px;min-height:44px;min-width:44px;display:block;margin:10px auto 0}
 .dos{border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}
 .dos h3{margin:0 0 6px;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .badge{display:inline-block;font-size:12px;font-weight:800;border-radius:8px;padding:3px 8px}

@@ -188,7 +188,7 @@ with sync_playwright() as p:
   pg.reload(); pg.wait_for_selector(".photos figure"); chk(pg.locator(".photos figure").count() == 2 and DESC in pg.inner_text(".photos"), "reload keeps photos + description")
   # --- delete still works ---
   pg.set_input_files("#cam", FIX); pg.wait_for_selector("#ancv"); pg.tap("#andone"); pg.wait_for_selector("#andesc"); pg.fill("#andesc", "weg"); pg.tap("#andescok")
-  pg.wait_for_function("document.querySelectorAll('.photos figure').length==3"); pg.tap('.photos .del[data-k="2"]')
+  pg.wait_for_function("document.querySelectorAll('.photos figure').length==3"); pg.tap('.photos .del[data-k="2"]'); pg.wait_for_selector('#myes'); pg.tap('#myes')
   chk(pg.locator(".photos figure").count() == 2 and "weg" not in pg.inner_text(".photos"), "delete photo (×) still works")
   # --- through to preview: translation mocked ---
   for _ in range(8): pg.click("#nx")
