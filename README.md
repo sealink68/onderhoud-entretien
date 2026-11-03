@@ -17,6 +17,8 @@ De opdrachten bewaren de PDF **lokaal op het toestel** en niet meer in iCloud Dr
 
 **Wie al een oudere opdracht heeft** (`Onderhoud_Entretien`, bewaarde in iCloud Drive): installeer één keer de nieuwe opdracht via *1. Installeer de opdracht*, tik daarna op *Start* (⚙ Instellingen technieker › *2. Start*) om de mappen aan te maken. De oude opdracht `Onderhoud_Entretien` mag je verwijderen.
 
+Zegt iOS bij *2. Start* **Bestand bestaat niet**? Dat is geen fout van de website (de installatielinks antwoorden 200 en de app maakt zelf geen mappen). De acties *Maak map aan* en *Bewaar bestand* in `OC_Iphone` / `OC_Ipad` wijzen naar een absoluut pad van het toestel waarop de opdracht gebouwd is. Kies op dit toestel die locatie opnieuw: **Op mijn iPhone** of **Op mijn iPad**. Zie `SHORTCUT.md`.
+
 **Backend:** Cloudflare Worker `onderhoud-api` → https://onderhoud-api.sealink68.workers.dev (bron in `../onderhoud-api/`)
 
 ## Verloop

@@ -18,7 +18,7 @@
     // final: reload only when one of this WO's queued doors actually reached the server (not on every failed retry)
     else if (sc === "final" && up && OE.$("modal").hidden && !OE.mem.finalMsg && !(OE.$("snd") && OE.$("snd").disabled && OE.mem.final && OE.mem.final.dossiers && OE.mem.final.dossiers.length)) { OE.mem.final = null; OE.render(1); }
   };
-  if (OE.$("ver")) OE.$("ver").textContent = (window.ServiceMax && ServiceMax.version) || "v2026.11.03-2";
+  if (OE.$("ver")) OE.$("ver").textContent = (window.ServiceMax && ServiceMax.version) || "v2026.11.03-3";
   if ("serviceWorker" in navigator) {
     try { sessionStorage.removeItem("oe_reloaded"); } catch (e) {}
     var hadCtrl = !!navigator.serviceWorker.controller;
@@ -27,7 +27,7 @@
       try { if (sessionStorage.getItem("oe_reloaded") === "1") return; sessionStorage.setItem("oe_reloaded", "1"); } catch (e) {}
       location.reload();
     });
-    navigator.serviceWorker.register("sw.js?v=2026.11.03-2").catch(function () {});
+    navigator.serviceWorker.register("sw.js?v=2026.11.03-3").catch(function () {});
   }
   OE.render(1);
   OE.outbox.changed(); OE.outbox.flush();

@@ -122,11 +122,11 @@ assert.strictEqual(SM.q1OnLoad("WO-TEST0008", { wo: "WO-TEST0008", product: "IP-
 assert.strictEqual(SM.q1OnLoad("WO-TEST0008", { wo: "WO-TEST0008", product: "" }), "");
 assert.strictEqual(SM.q1OnLoad("", { wo: "WO-TEST0008", product: "IP-00000008|TESTDEUR" }), "IP-00000008|TESTDEUR");
 assert.strictEqual(SM.q1OnLoad("handmatig dossier", { wo: "WO-TEST0008", product: "IP-00000008|TESTDEUR" }), "handmatig dossier");
-assert.strictEqual(SM.version, "v2026.11.03-2");
+assert.strictEqual(SM.version, "v2026.11.03-3");
 ["index.html", "sw.js", "js/app.js", "js/servicemax.js"].forEach(function (f) {
   var src = fs.readFileSync(path.join(__dirname, "..", f), "utf8");
-  assert.ok(src.indexOf("v2026.11.03-2") >= 0, f + " missing version");
-  assert.ok(src.indexOf("v2026.11.03-1") < 0, f + " still on the previous cache version");
+  assert.ok(src.indexOf("v2026.11.03-3") >= 0, f + " missing version");
+  assert.ok(src.indexOf("v2026.11.03-2") < 0, f + " still on the previous cache version");
 });
 var sw = fs.readFileSync(path.join(__dirname, "..", "sw.js"), "utf8");
 assert.ok(sw.indexOf("skipWaiting") >= 0);

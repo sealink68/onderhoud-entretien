@@ -17,6 +17,29 @@ Er zijn **twee opdrachten**, één per toestel. Ze doen hetzelfde, maar bewaren 
 > opdracht voor je toestel en tik op **2. Start** om de mappen aan te maken. De oude opdracht `Onderhoud_Entretien` mag je
 > verwijderen (Opdrachten › vinger op de opdracht houden › *Verwijder*).
 
+## „Bestand bestaat niet” bij 2. Start
+
+Die melding komt **niet** uit de web-app (die tekst staat nergens in de site). Stap 2 opent alleen
+
+`shortcuts://run-shortcut?name=OC_Iphone&input=text&text=setup`
+
+(iPad: `name=OC_Ipad`). De installatielinks hierboven antwoorden HTTP 200. De fout komt uit de iOS-actie **Maak map aan** (*Create Folder*).
+
+In de gepubliceerde opdracht is de locatie geen losse keuze „Op mijn iPhone”, maar een **absoluut pad van het toestel waarop de opdracht gemaakt is**:
+
+| Opdracht | Pad in *Maak map aan* (3×) en *Bewaar bestand* |
+|---|---|
+| `OC_Iphone` | `/private/var/mobile/Containers/Shared/AppGroup/076C042D-F559-417E-992D-8F3072A3082D/File Provider Storage` |
+| `OC_Ipad` | `/private/var/mobile/Containers/Shared/AppGroup/618E2763-13E0-4943-9F15-CD0F2BE68541/File Provider Storage` |
+
+Op een ander toestel bestaat die map niet, dus iOS stopt met **Bestand bestaat niet** nog vóór `Rapport` aangemaakt wordt. Opnieuw installeren via dezelfde iCloud-link zet hetzelfde pad terug. **Kies de locatie één keer opnieuw op het toestel dat de opdracht gebruikt.**
+
+1. Open **Opdrachten** → `OC_Iphone` (op een iPad: `OC_Ipad`).
+2. Bij **elke** actie **Maak map aan** (paden `Rapport`, `Rapport/Onderhoud_Entretien`, `Rapport/Depannage`) en bij **Bewaar bestand**: tik op de locatie en kies opnieuw **Op mijn iPhone** of **Op mijn iPad**, de hoofdmap. Niet iCloud Drive, niet een grijze of ontbrekende map.
+3. Volgorde laten staan: eerst alleen `Rapport` (ouder bestaat dan), daarna `Rapport/Onderhoud_Entretien` en `Rapport/Depannage`. Subpad van *Bewaar bestand* blijft `Rapport/Onderhoud_Entretien/`, overschrijven aan.
+4. Tik daarna in de web-app opnieuw op **2. Start (mappen aanmaken)**.
+5. Zegt iOS daarna **De map bestaat al**, dan zijn de mappen er al. Dat is in orde; de tak stopt daarna toch. „Bestand bestaat niet” is de andere melding en betekent dat de locatie nog het vreemde pad is.
+
 De web-app start de opdracht van het toestel op twee manieren (naam en invoer URL-gecodeerd):
 
 | Moment | URL die de app opent (iPhone; iPad: `name=OC_Ipad`) | Invoer |
