@@ -8,9 +8,10 @@
 
   /* ---------- 1. language ---------- */
   SC.lang = function () {
-    $("card").innerHTML = '<div class="start"><h2>Kies je taal</h2><p>Choisissez votre langue</p>' +
+    $("card").innerHTML = OE.scanBar() + '<div class="start"><h2>Kies je taal</h2><p>Choisissez votre langue</p>' +
       '<button class="btn pri big" data-l="nl">🇧🇪 Nederlands<small>' + OE.T.nl.langNl + '</small></button>' +
       '<button class="btn sec big" data-l="fr">🇫🇷 Français<small>' + OE.T.fr.langFr + "</small></button></div>";
+    OE.bindScan();
     [].forEach.call($("card").querySelectorAll("[data-l]"), function (b) {
       b.onclick = function () { OE.S.lang = b.dataset.l; OE.go(OE.S.tech.first && OE.S.tech.last ? "mode" : "tech"); };
     });
@@ -134,7 +135,7 @@
   function finalBtn() { var b = $("fin"); if (b) b.style.display = OE.S.wo && !OE.S.woIsNew ? "" : "none"; }
   SC.wo = function () {
     var S = OE.S, x = OE.t();
-    $("card").innerHTML = '<h2 class="q">' + x.woH + "</h2>" +
+    $("card").innerHTML = OE.scanBar() + '<h2 class="q">' + x.woH + "</h2>" +
       '<label class="lbl">' + x.woExisting + '</label><div id="wol"></div>' +
       '<label class="lbl" for="won">' + x.woNew + '</label><div class="pre"><span>WO-</span><input id="won" autocapitalize="characters" autocomplete="off" placeholder="' + x.woNewPh + '"></div>' +
       '<label class="lbl" for="dn">' + x.dossier + '</label><textarea id="dn" rows="1" autocomplete="off" autocapitalize="characters" enterkeyhint="next"></textarea>' +
@@ -151,7 +152,7 @@
     won.onblur = function () { won.value = OE.normId(won.value).replace(/^WO-/i, ""); S.woNewTxt = won.value; S.woIsNew = !!won.value; OE.save(); };
     dn.onblur = function () { dn.value = OE.normId(dn.value); S.dossier = dn.value; OE.save(); OE.fit(dn); };
     dn.onkeydown = function (e) { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); next(); } };
-    drawWOList(); if (!mem.woList) loadWOs(); finalBtn();
+    drawWOList(); if (!mem.woList) loadWOs(); finalBtn(); OE.bindScan(); OE.fit(dn);
     OE.bind("bk", function () { OE.go("mode", -1); });
     OE.bind("fin", function () { mem.final = null; OE.go("final"); });
     OE.bind("nx", next);
@@ -247,6 +248,7 @@
         return r;
       }),
       extra: S.extra.trim(),
+      client: OE.copyClient(S.client),
       texts: Q.map(function (q, i) { return { nl: q.nl, fr: q.fr, fixed: q.fixed || null, revisit: q.kind === "revisit" ? OE.REVISIT : null }; })
     };
     if (ed) { d.editedBy = { first: S.tech.first, last: S.tech.last, initials: OE.initials(S.tech.first, S.tech.last) }; d.firstCreatedAt = ed.createdAt; }
@@ -268,7 +270,9 @@
     var x = OE.T[L], rem = OE.hasRemarks(d);
     var rows = OE.reportRows(d, L).filter(function (r) { return !r.ok || opts.all; });
     var O = OE.other(L);
-    return '<div class="dos"><h3><span>' + esc(d.dossier) + ' <small style="color:#64748b">· ' + esc(d.tech.initials) + "</small></span>" +
+    var client = OE.clientBlock(d, L);
+    return (client ? '<pre class="clientblk">' + esc(client.trim()) + "</pre>" : "") +
+      '<div class="dos"><h3><span>' + esc(d.dossier) + ' <small style="color:#64748b">· ' + esc(d.tech.initials) + "</small></span>" +
       '<span class="badge ' + (rem ? "r" : "g") + '">' + (rem ? x.remarks : x.allOk) + "</span></h3>" +
       '<ul class="res">' + rows.map(function (r) {
         var other = opts.tr ? OE.reportRows(d, O)[r.n - 1] : null;
@@ -513,7 +517,7 @@
   function editDossier(dn) {
     var S = OE.S, d = mem.final.dossiers.filter(function (z) { return z.dossier === dn; })[0]; if (!d) return;
     var maxN = 0;
-    S.dossier = d.dossier; S.extra = d.extra || ""; S.tr = null; S.step = 0;
+    S.dossier = d.dossier; S.client = OE.copyClient(d.client); S.extra = d.extra || ""; S.tr = null; S.step = 0;
     S.answers = d.answers.map(function (a) {
       (a.photos || []).forEach(function (n) { var m = /_(\d+)\.jpg$/.exec(n); if (m) maxN = Math.max(maxN, +m[1]); });
       var pd = a.photoDesc || {};

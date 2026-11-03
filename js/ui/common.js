@@ -34,6 +34,7 @@
   OE.anim = function (dir) { var c = OE.$("card"); c.classList.remove("slide-in-r", "slide-in-l"); void c.offsetWidth; c.classList.add(dir < 0 ? "slide-in-l" : "slide-in-r"); };
   OE.render = function (dir) {
     var S = OE.S; OE.hdr(); OE.$("top").innerHTML = "";
+    if (OE.mem && OE.mem.ocr && OE.screens.ocr) { OE.screens.ocr(); OE.anim(dir || 1); OE.fitAll(); window.scrollTo(0, 0); return; }
     if (!S.lang) S.screen = "lang";
     else if ((!S.tech.first || !S.tech.last) && S.screen !== "lang") S.screen = "tech";
     (OE.screens[S.screen] || OE.screens.mode)();

@@ -58,6 +58,12 @@
         font("normal", 9.5, C.tx); doc.text(clean(P.tech + ": " + OE.techLabel(d.tech)), M + 4, y + 13.5);
         font("normal", 8.5, C.mu); doc.text(clean((P.mode[d.mode] || "") + "   ·   " + P.sent + ": " + when.toLocaleDateString("nl-BE") + " " + when.toLocaleTimeString("nl-BE", { hour: "2-digit", minute: "2-digit" })), M + 4, y + 18);
         y += 24;
+        ["nl", "fr"].forEach(function (L, li) {
+          var block = OE.clientBlock(d, L).trim();
+          if (!block) return;
+          block.split("\n").forEach(function (ln, i) { draw(para(ln, M, CW, i === 0 ? "bold" : (li ? "italic" : "normal"), i === 0 ? 10.5 : 9.5, li && i ? C.mu : C.tx)); });
+          y += 1.5;
+        });
         // ---- checklist rows: each row kept together ----
         var rn = OE.reportRows(d, "nl"), rf = OE.reportRows(d, "fr"), BW = 34, QW = CW - BW - 4;
         rn.forEach(function (r, i) {

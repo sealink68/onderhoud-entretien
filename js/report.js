@@ -70,9 +70,11 @@
     out.push(T.extra + ": " + (ex.t.trim() ? ex.t : "–"));
     return out.join("\n");
   };
+  OE.clientBlock = function (d, L) { return window.ServiceMax ? ServiceMax.formatBlock(L, d && d.client) : ""; };
   OE.dossierText = function (d) {
     var L = d.lang, O = OE.other(L);
     return "Dossier " + d.dossier + "\n" + OE.PDFT.tech + ": " + OE.techLabel(d.tech) + "\n\n" +
-      OE.dossierBlock(d, L) + "\n\n" + OE.CFG.SEP + "\n(" + OE.DISC + ")\n\n" + OE.dossierBlock(d, O);
+      OE.clientBlock(d, L) + OE.dossierBlock(d, L) + "\n\n" + OE.CFG.SEP + "\n(" + OE.DISC + ")\n\n" +
+      OE.clientBlock(d, O) + OE.dossierBlock(d, O);
   };
 })(window.OE);

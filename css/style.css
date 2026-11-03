@@ -78,6 +78,20 @@ h1#title{font-size:22px}
 .pre span{display:flex;align-items:center;padding:0 12px;background:#e2e8f0;border-radius:14px 0 0 14px;font-weight:800}
 .pre input{border-radius:0 14px 14px 0}
 .small{font-size:13px;background:none;border:0;color:var(--a);font-weight:700;cursor:pointer;padding:10px 8px;min-height:44px;min-width:44px;display:block;margin:10px auto 0}
+.scan{background:#fff;color:var(--a);border:2px solid #e0e7ff;box-shadow:none}
+.scan small{color:var(--mu)}
+.scan-hint{margin:0 0 14px}
+.fields label{display:block;font-size:13px;font-weight:700;color:var(--mu);margin:12px 0 0}
+.fields label small{display:block;font-weight:500;color:#94a3b8}
+.fields input,.fields textarea{margin-top:6px}
+.btns.stack{flex-direction:column}
+.btns.stack .btn{width:100%}
+.ocrbar{height:8px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin:12px 0}
+.ocrbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .2s linear}
+.oknote{color:#047857;font-weight:600;margin:0 0 14px}
+.filepick{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.ver{margin:16px 0 0;text-align:center;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;letter-spacing:.04em}
+.clientblk{white-space:pre-wrap;word-wrap:break-word;font:inherit;font-size:14px;line-height:1.45;margin:0 0 12px;background:#f8fafc;border-radius:14px;padding:12px 14px}
 .dos{border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin:10px 0}
 .dos h3{margin:0 0 6px;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .badge{display:inline-block;font-size:12px;font-weight:800;border-radius:8px;padding:3px 8px}

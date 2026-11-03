@@ -24,7 +24,7 @@ De opdrachten bewaren de PDF **lokaal op het toestel** en niet meer in iCloud Dr
 1. Taalkeuze NL / FR.
 2. Eenmalig: voornaam + achternaam van de technieker. Stap *1. Installeer de opdracht* opent de installatielink van de opdracht voor dit toestel (iPhone of iPad), stap *2. Start* bewaart de naam. De initialen worden daaruit afgeleid. *Start* bewaart je naam en start de iOS-opdracht met `setup` om de mappen aan te maken. Aanpassen kan later via **⚙ Instellingen technieker**.
 3. Keuze: 1 toestel of meerdere toestellen. Beide keuzes volgen hetzelfde verloop; de keuze wordt alleen bewaard.
-4. Werkorder: kies een bestaande WO (lijst van de worker) of maak een nieuwe aan (prefix `WO-` wordt afgedwongen). Vul daarna het dossiernummer in.
+4. Werkorder: kies een bestaande WO (lijst van de worker) of maak een nieuwe aan (prefix `WO-` wordt afgedwongen). Vul daarna het dossiernummer in. Bovenaan het startscherm en op dit scherm staat **Screenshot ServiceMax inlezen** / **Lire capture ServiceMax**: één of meer schermafbeeldingen worden op het toestel gelezen (Tesseract.js, `nld+fra+eng`, niets wordt opgeladen). Na **Overnemen / Reprendre** komt het geïnstalleerd product in het dossiernummer (nooit het WO-nummer; leeg als er geen product is). WO, account, adres, contact en product staan in het blok **Klantgegevens / Données client** van het verslag en de PDF. Onderwerp / Objet wordt niet overgenomen.
 5. Acht stellingen, elk standaard **Juist**. Kies je **Niet juist**, dan verschijnt de juiste invulling: een beschrijving, een vaste tekst of *revisit*. Bij stelling 1 is minstens één foto verplicht. Na elke foto (camera of bibliotheek) opent meteen een tekeneditor op volledig scherm (pijl, cirkel/ellips, rechthoek, vrij tekenen, maatlijn met label, tekst; 5 kleuren, 3 diktes, ongedaan maken, alles wissen, Annuleren/Klaar), daarna een optionele korte beschrijving (max. 150 tekens). Alleen de bewerkte versie wordt bewaard (max. 2000 px lange zijde, JPEG ±0.85) met de naam `<WO>_<dossier>_<n>.jpg`; de beschrijving staat in het dossier (`answers[i].photoDesc`) en komt, automatisch vertaald, onder de foto in de PDF. De revisit-zin staat maar één keer per dossier in het verslag.
 6. Extra informatie (optioneel), daarna een voorbeeld met automatische vertaling. Vanuit het voorbeeld verstuur je het dossier naar centraal.
 6b. *Verstuur naar centraal* zet het dossier (met foto's) in een **outbox** op het toestel en opent meteen ServiceMax Go (in dezelfde tik). Het opladen loopt verder op de achtergrond en wordt automatisch opnieuw geprobeerd (bij opstarten, terugkeren naar de app, internet terug, elke 20 s) tot de server het bevestigt. Bovenaan staat dan “1 dossier wacht op verzending” of “Verzonden ✓”. Het eindverslag waarschuwt als er op dit toestel nog dossiers wachten.
@@ -42,7 +42,10 @@ Alles wat je aan het invullen bent, wordt in `localStorage` bewaard. Herladen ko
 ```
 index.html              opmaak + volgorde van de scripts (geen build-stap)
 css/style.css           stijl (Werkrapport-basis + uitbreidingen)
+js/servicemax.js         ServiceMax-schermafbeelding: parser NL/FR (WO, account, adres, contact, product)
+js/ocr.js               knop, Tesseract op het toestel, controlekaart
 js/config.js            ALLE teksten NL/FR: stellingen, vaste teksten, labels, samenvatting, PDF + endpoints
+sw.js                   versie-cache (netwerk eerst voor html/js)
 js/i18n.js              taalhulpjes, initialen
 js/storage.js           localStorage-status (instellingen + lopend dossier)
 js/api.js               calls naar de worker
