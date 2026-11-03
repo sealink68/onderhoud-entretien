@@ -122,10 +122,11 @@ assert.strictEqual(SM.q1OnLoad("WO-TEST0008", { wo: "WO-TEST0008", product: "IP-
 assert.strictEqual(SM.q1OnLoad("WO-TEST0008", { wo: "WO-TEST0008", product: "" }), "");
 assert.strictEqual(SM.q1OnLoad("", { wo: "WO-TEST0008", product: "IP-00000008|TESTDEUR" }), "IP-00000008|TESTDEUR");
 assert.strictEqual(SM.q1OnLoad("handmatig dossier", { wo: "WO-TEST0008", product: "IP-00000008|TESTDEUR" }), "handmatig dossier");
-assert.strictEqual(SM.version, "v2026.11.03-1");
+assert.strictEqual(SM.version, "v2026.11.03-2");
 ["index.html", "sw.js", "js/app.js", "js/servicemax.js"].forEach(function (f) {
   var src = fs.readFileSync(path.join(__dirname, "..", f), "utf8");
-  assert.ok(src.indexOf("v2026.11.03-1") >= 0, f + " missing version");
+  assert.ok(src.indexOf("v2026.11.03-2") >= 0, f + " missing version");
+  assert.ok(src.indexOf("v2026.11.03-1") < 0, f + " still on the previous cache version");
 });
 var sw = fs.readFileSync(path.join(__dirname, "..", "sw.js"), "utf8");
 assert.ok(sw.indexOf("skipWaiting") >= 0);
@@ -143,6 +144,38 @@ assert.strictEqual(SM.labels.nl.scan, "Screenshot ServiceMax inlezen");
 assert.strictEqual(SM.labels.fr.scan, "Lire capture ServiceMax");
 assert.strictEqual(SM.labels.nl.take, "Overnemen");
 assert.strictEqual(SM.labels.fr.take, "Reprendre");
+
+// Nieuwe werkorder (#won) stores only the text after the fixed "WO-" prefix.
+var scanned = { wo: "WO-00536220", account: "TEST ACCOUNT NV", adres: "TESTSTRAAT 1", contact: "Test Persoon +32000000001", product: "IP-00767007|KENTAUR FTS-E02" };
+var f1 = SM.woField("WO-00536220");
+assert.strictEqual(f1.full, "WO-00536220");
+assert.strictEqual(f1.input, "00536220");
+var f2 = SM.woField("wo-TEST0001");
+assert.strictEqual(f2.full, "WO-TEST0001");
+assert.strictEqual(f2.input, "TEST0001");
+assert.strictEqual(SM.woField("IP-00767007|KENTAUR FTS-E02").full, "");
+function take(client) {
+  var S = { wo: "WO-OLD", woNewTxt: "", woIsNew: false, dossier: "handmatig" };
+  SM.applyWorkOrderField(S, client);
+  return S;
+}
+// Both scan buttons call this same apply on Overnemen.
+["start", "dossier"].forEach(function (where) {
+  var S = take(scanned);
+  assert.strictEqual(S.woNewTxt, "00536220", where);
+  assert.strictEqual(S.woIsNew, true, where);
+  assert.strictEqual(S.wo, "", where);
+  assert.strictEqual("WO-" + S.woNewTxt, "WO-00536220", where);
+  assert.strictEqual(S.dossier, "IP-00767007|KENTAUR FTS-E02", where);
+  assert.ok(S.dossier.indexOf("WO-") < 0, where);
+});
+var restored = JSON.parse(JSON.stringify(take(scanned)));
+assert.strictEqual(restored.woNewTxt, "00536220", "reload keeps the nieuwe-werkorder field");
+assert.strictEqual(restored.woIsNew, true);
+var noWo = take({ wo: "", product: "IP-00000009|TESTDEUR" });
+assert.strictEqual(noWo.wo, "WO-OLD", "no scanned WO does not clear a WO already chosen");
+assert.strictEqual(noWo.woNewTxt, "");
+assert.strictEqual(noWo.dossier, "IP-00000009|TESTDEUR");
 
 var sample = SM.parse([
   "Routebeschrijving ophalen",

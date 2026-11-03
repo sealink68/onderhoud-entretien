@@ -60,8 +60,9 @@
       grabDraft();
       var d = OE.mem.draft;
       OE.S.client = { wo: d.wo.trim(), account: d.account.trim(), adres: d.adres.trim(), contact: d.contact.trim(), product: d.product.trim() };
-      // Dossier field is the installed product, never the work-order number.
-      OE.S.dossier = ServiceMax.dossierFrom(OE.S.client);
+      // Same handler for the start-screen button and the dossier-page button.
+      // #won (nieuwe werkorder) reads S.woNewTxt; dossiernummer stays the product.
+      ServiceMax.applyWorkOrderField(OE.S, OE.S.client);
       OE.mem.ocr = null;
       OE.save();
       OE.render(1);

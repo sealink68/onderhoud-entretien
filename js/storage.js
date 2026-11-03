@@ -20,7 +20,14 @@
     if (!S || typeof S !== "object") S = {};
     S.lang = S.lang || null; S.tech = S.tech || { first: "", last: "" };
     S.mode = S.mode || null; S.screen = S.screen || "lang"; S.wo = S.wo || "";
-    if (!Array.isArray(S.answers) || S.answers.length !== OE.QUESTIONS.length) { var w = S.wo, m = S.mode; OE.blankDraft(S); S.wo = w; S.mode = m; }
+    S.woNewTxt = typeof S.woNewTxt === "string" ? S.woNewTxt : "";
+    S.woIsNew = !!S.woIsNew && !!S.woNewTxt;
+    if (!Array.isArray(S.answers) || S.answers.length !== OE.QUESTIONS.length) {
+      var keep = { wo: S.wo, mode: S.mode, woNewTxt: S.woNewTxt, woIsNew: S.woIsNew, client: S.client, dossier: S.dossier };
+      OE.blankDraft(S);
+      S.wo = keep.wo || ""; S.mode = keep.mode; S.woNewTxt = keep.woNewTxt || ""; S.woIsNew = !!keep.woIsNew && !!S.woNewTxt;
+      S.client = keep.client; S.dossier = keep.dossier || "";
+    }
     S.step = +S.step || 0; S.extra = S.extra || ""; S.photoSeq = +S.photoSeq || 0;
     S.client = OE.copyClient(S.client);
     if (window.ServiceMax) S.dossier = ServiceMax.q1OnLoad(S.dossier, S.client);

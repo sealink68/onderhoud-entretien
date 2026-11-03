@@ -229,7 +229,7 @@ function merge(texts){
   acc=acc.concat(lines.slice(best))}
  return acc.join("\n")}
 
-var VERSION="v2026.11.03-1";
+var VERSION="v2026.11.03-2";
 function isWorkOrder(s){
  return /^WO-(?:TEST\d{3,8}|\d{8})$/i.test(String(s||"").replace(/\s+/g,"").trim())}
 // Question 1 is the installed product. A bare work-order number is never a dossier value.
@@ -237,6 +237,22 @@ function dossierFrom(client){
  var p=String(client&&client.product||"").replace(/\s+/g," ").trim();
  if(!p||isWorkOrder(p)) return "";
  return p}
+// #won shows only the part after the fixed "WO-" prefix on the nieuwe-werkorder field.
+function woField(raw){
+ var full=normWO(raw);
+ if(!full) return {full:"",input:""};
+ return {full:full,input:full.replace(/^WO-/i,"")}}
+// Dossiernummer stays the product. A recognized WO fills the nieuwe-werkorder field (woNewTxt) and clears S.wo
+// so a later restore of an old selected WO cannot hide the number just read.
+function applyWorkOrderField(S,client){
+ client=client||{};
+ S.dossier=dossierFrom(client);
+ var f=woField(client.wo);
+ if(!f.full) return S;
+ S.woNewTxt=f.input;
+ S.woIsNew=true;
+ S.wo="";
+ return S}
 // Restore: a stored WO (from the previous auto-fill) yields the product, or stays empty.
 // A hand-typed value that is not a work order is kept.
 function q1OnLoad(stored,client){
@@ -259,6 +275,8 @@ root.ServiceMax={
  blank:blank,
  formatBlock:formatBlock,
  dossierFrom:dossierFrom,
+ woField:woField,
+ applyWorkOrderField:applyWorkOrderField,
  q1OnLoad:q1OnLoad,
  isWorkOrder:isWorkOrder,
  version:VERSION,
