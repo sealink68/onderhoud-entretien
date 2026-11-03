@@ -138,7 +138,7 @@
         font("normal", 9, C.mu); doc.text(clean(P.wo + ": " + wo + "   ·   " + ds), W - M, 12, { align: "right", maxWidth: CW - 75 });
         doc.setDrawColor(79, 70, 229); doc.setLineWidth(0.6); doc.line(M, 15.5, W - M, 15.5); doc.setLineWidth(0.2);
         doc.setDrawColor(226, 232, 240); doc.line(M, H - 13, W - M, H - 13);
-        font("normal", 8, C.li); doc.text(clean("OC_" + wo + ".pdf  ·  dormakaba"), M, H - 8);
+        font("normal", 8, C.li); doc.text(clean("OC_" + (OE.fileToken ? OE.fileToken(wo) : wo) + ".pdf  ·  dormakaba"), M, H - 8);
         doc.text(clean(P.page + " " + i + "/" + np), W - M, H - 8, { align: "right" });
       }
       return doc.output("blob");

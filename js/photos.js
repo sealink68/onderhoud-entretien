@@ -19,8 +19,13 @@
     for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
     return new Blob([u], { type: "image/jpeg" });
   };
-  // Only characters that break file names / paths are replaced; everything else (ü, (), ...) stays.
-  OE.safeFile = function (s) { return String(s).replace(/[\s\/\\:*?"<>|\u0000-\u001F\u007F]/g, "_"); };
+  /* Filename-safe, but the dossier text itself is not rewritten.
+     Unusable characters become "_"; spaces stay (IP-00767007|KENTAUR FTS-E02 → IP-00767007_KENTAUR FTS-E02).
+     Trim, collapse repeated underscores, and drop leading/trailing dots and spaces. */
+  OE.safeFile = function (s) {
+    var t = String(s == null ? "" : s).replace(/[\u0000-\u001F\u007F\/\\:*?"<>|]/g, "_").replace(/_+/g, "_");
+    return t.replace(/^[\s._]+|[\s._]+$/g, "");
+  };
   OE.photoName = function (wo, dn, n) { return OE.safeFile(wo + "_" + dn + "_" + n + ".jpg"); };
   /* Upload every photo of the draft that is not on the server yet. */
   OE.uploadPending = function (S) {

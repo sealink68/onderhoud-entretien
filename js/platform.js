@@ -48,8 +48,24 @@
     var k = OE.deviceKind(), sc = k === "other" ? OE.CFG.SHORTCUT_NAME_IPHONE + " / " + OE.CFG.SHORTCUT_NAME_IPAD : OE.shortcutName(k);
     return String(s).replace(/\{dev\}/g, OE.deviceLabel(k)).replace(/\{sc\}/g, sc);
   };
+  /* Value that is both a filename and a URL path segment (the Shortcut pastes it into /wo/<input>/pdf and OC_<input>.pdf).
+     Spaces become underscores here; safeFile keeps them for on-device names. */
+  OE.fileToken = function (s) {
+    var t = OE.safeFile(s).replace(/\s+/g, "_").replace(/_+/g, "_").replace(/^_+|_+$/g, "");
+    return t;
+  };
+  /* WO sent to the Shortcut. Prefer the open final report, then the chosen WO, then a scanned number not yet confirmed. */
+  OE.shortcutWO = function () {
+    var S = OE.S || {}, fin = OE.mem && OE.mem.final, raw = (fin && fin.wo) || S.wo || "";
+    if (!raw && S.woIsNew && S.woNewTxt) raw = (OE.CFG.WO_PREFIX || "WO-") + String(S.woNewTxt).replace(/^WO-/i, "");
+    if (!raw && S.client && S.client.wo) raw = S.client.wo;
+    return OE.fileToken(raw);
+  };
   OE.shortcutUrl = function (text) {
-    return "shortcuts://run-shortcut?name=" + encodeURIComponent(OE.shortcutName()) + (text != null ? "&input=text&text=" + encodeURIComponent(text) : "");
+    var token = text === "setup" ? "setup" : OE.fileToken(text);
+    var url = "shortcuts://run-shortcut?name=" + encodeURIComponent(OE.shortcutName());
+    if (token) url += "&input=text&text=" + encodeURIComponent(token);
+    return url;
   };
   OE.runShortcut = function (text) {
     var url = OE.shortcutUrl(text);

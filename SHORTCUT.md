@@ -40,6 +40,19 @@ Op een ander toestel bestaat die map niet, dus iOS stopt met **Bestand bestaat n
 4. Tik daarna in de web-app opnieuw op **2. Start (mappen aanmaken)**.
 5. Zegt iOS daarna **De map bestaat al**, dan zijn de mappen er al. Dat is in orde; de tak stopt daarna toch. „Bestand bestaat niet” is de andere melding en betekent dat de locatie nog het vreemde pad is.
 
+## „OC_.pdf bewaard” en een bestand dat niet opent
+
+De melding `OC_.pdf bewaard` komt uit de opdracht, niet uit de website. In de tak *Anders* plakt de opdracht **Opdrachtinvoer** op twee plaatsen, zonder die tekst te decoderen (er is geen Base64 en geen klembord):
+
+1. **URL**: `https://onderhoud-api.sealink68.workers.dev/wo/` + **Opdrachtinvoer** + `/pdf`
+2. **Stel naam in**: `OC_` + **Opdrachtinvoer** + `.pdf`
+3. **Bewaar bestand** bewaart die download.
+4. **Toon melding**: `OC_` + **Opdrachtinvoer** + `.pdf bewaard`
+
+Is de invoer leeg, dan wordt de URL `…/wo//pdf`. Die antwoordt `{"error":"Invalid WO"}` (geen PDF). Dat JSON-bestand heet `OC_.pdf` en Bestanden meldt dat het beschadigd is. Een `|` of een spatie in de invoer (bijvoorbeeld het dossier `IP-00767007|KENTAUR FTS-E02`) hoort daar ook niet: de opdracht zet de tekst letterlijk in het webadres en in de bestandsnaam. De app stuurt daarom alleen een veilige tekst (`|` en spaties worden `_`, het dossierveld op het scherm blijft met `|`).
+
+Verwijder `OC_.pdf`. Tik daarna opnieuw op **▶ Bewaar PDF (opdracht starten)**. Het bestand moet `OC_WO-….pdf` heten en openen. Gebeurt dat niet, controleer in de opdracht dat **URL**, **Stel naam in** en **Toon melding** alle drie de variabele **Opdrachtinvoer** gebruiken (niet Klembord, niet een lege variabele). Voeg geen actie **Decodeer Base64** of **Haal klembord op** toe.
+
 De web-app start de opdracht van het toestel op twee manieren (naam en invoer URL-gecodeerd):
 
 | Moment | URL die de app opent (iPhone; iPad: `name=OC_Ipad`) | Invoer |

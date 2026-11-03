@@ -484,8 +484,13 @@
   }
   function finalStale(w) { return !!(w && w.pdfAt && w.dossiers.some(function (d) { return (d.firstReceivedAt || d.receivedAt || 0) > w.pdfAt; })); }
   function bindFinalMsg() {
-    OE.bind("rsc", function () { OE.copyText(mem.summary); OE.runShortcut(OE.S.wo); });
-    OE.bind("pdl", function () { if (mem.pdfBlob) OE.shareOrDownload(mem.pdfBlob, OE.safeFile("OC_" + OE.S.wo + ".pdf")); });
+    OE.bind("rsc", function () {
+      var wo = OE.shortcutWO();
+      if (!wo) { OE.err(OE.t().needShortcutWo); return; }
+      // Do not write the clipboard in this tap: iOS then drops input=text and the Shortcut saves OC_.pdf.
+      OE.runShortcut(wo);
+    });
+    OE.bind("pdl", function () { if (mem.pdfBlob) OE.shareOrDownload(mem.pdfBlob, "OC_" + (OE.shortcutWO() || "verslag") + ".pdf"); });
     OE.bind("cpy", function () { OE.copyText(mem.summary); });
   }
   function sendFinal() {
