@@ -51,7 +51,8 @@
   /* Value that is both a filename and a URL path segment (the Shortcut pastes it into /wo/<input>/pdf and OC_<input>.pdf).
      Spaces become underscores here; safeFile keeps them for on-device names. */
   OE.fileToken = function (s) {
-    var t = OE.safeFile(s).replace(/\s+/g, "_").replace(/_+/g, "_").replace(/^_+|_+$/g, "");
+    var t = OE.safeFile(s).replace(/\s+/g, "_").replace(/_+/g, "_").replace(/^_+/g, "");
+    if (!t || /^_+$/.test(t)) return "";
     return t;
   };
   /* WO sent to the Shortcut. Prefer the open final report, then the chosen WO, then a scanned number not yet confirmed. */
@@ -74,6 +75,7 @@
   };
   /* Share (iOS share sheet) when possible, else download. */
   OE.shareOrDownload = function (blob, name) {
+    name = OE.safeFile(name) || "bestand";
     try {
       var f = new File([blob], name, { type: blob.type });
       if (navigator.canShare && navigator.canShare({ files: [f] }) && navigator.share) return navigator.share({ files: [f], title: name }).catch(function () {});

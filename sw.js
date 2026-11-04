@@ -1,28 +1,28 @@
 "use strict";
 // Bump this together with the ?v= query on index.html and the footer label.
-var VERSION = "v2026.11.03-4";
-var CACHE = "onderhoud-v2026.11.03-4";
+var VERSION = "v2026.11.04-1";
+var CACHE = "onderhoud-v2026.11.04-1";
 var SHELL = [
   "./",
   "./index.html",
-  "./css/style.css?v=2026.11.03-4",
-  "./js/servicemax.js?v=2026.11.03-4",
-  "./js/ocr.js?v=2026.11.03-4",
-  "./js/config.js?v=2026.11.03-4",
-  "./js/i18n.js?v=2026.11.03-4",
-  "./js/storage.js?v=2026.11.03-4",
-  "./js/api.js?v=2026.11.03-4",
-  "./js/translate.js?v=2026.11.03-4",
-  "./js/photos.js?v=2026.11.03-4",
-  "./js/annot.js?v=2026.11.03-4",
-  "./js/outbox.js?v=2026.11.03-4",
-  "./js/report.js?v=2026.11.03-4",
-  "./js/summary.js?v=2026.11.03-4",
-  "./js/pdf.js?v=2026.11.03-4",
-  "./js/platform.js?v=2026.11.03-4",
-  "./js/ui/common.js?v=2026.11.03-4",
-  "./js/ui/screens.js?v=2026.11.03-4",
-  "./js/app.js?v=2026.11.03-4",
+  "./css/style.css?v=2026.11.04-1",
+  "./js/servicemax.js?v=2026.11.04-1",
+  "./js/ocr.js?v=2026.11.04-1",
+  "./js/config.js?v=2026.11.04-1",
+  "./js/i18n.js?v=2026.11.04-1",
+  "./js/storage.js?v=2026.11.04-1",
+  "./js/api.js?v=2026.11.04-1",
+  "./js/translate.js?v=2026.11.04-1",
+  "./js/photos.js?v=2026.11.04-1",
+  "./js/annot.js?v=2026.11.04-1",
+  "./js/outbox.js?v=2026.11.04-1",
+  "./js/report.js?v=2026.11.04-1",
+  "./js/summary.js?v=2026.11.04-1",
+  "./js/pdf.js?v=2026.11.04-1",
+  "./js/platform.js?v=2026.11.04-1",
+  "./js/ui/common.js?v=2026.11.04-1",
+  "./js/ui/screens.js?v=2026.11.04-1",
+  "./js/app.js?v=2026.11.04-1",
   "./manifest.webmanifest"
 ];
 self.addEventListener("install", function (e) {

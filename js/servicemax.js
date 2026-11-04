@@ -229,7 +229,7 @@ function merge(texts){
   acc=acc.concat(lines.slice(best))}
  return acc.join("\n")}
 
-var VERSION="v2026.11.03-4";
+var VERSION="v2026.11.04-1";
 function isWorkOrder(s){
  return /^WO-(?:TEST\d{3,8}|\d{8})$/i.test(String(s||"").replace(/\s+/g,"").trim())}
 // Question 1 is the installed product. A bare work-order number is never a dossier value.
