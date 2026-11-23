@@ -49,7 +49,7 @@ with sync_playwright() as p:
     br = getattr(p, bn).launch()
     for dev, (vp, lang) in VP.items():
       tag = f"{bn}_{dev}_{lang}"; nl = lang == "nl"; db.reset()
-      c = br.new_context(viewport={"width": vp[0], "height": vp[1]}, user_agent=UA.replace("iPhone", "iPad") if dev == "ipad" else UA, has_touch=True, is_mobile=(bn == "chromium"))
+      c = br.new_context(viewport={"width": vp[0], "height": vp[1]}, user_agent=UA.replace("iPhone", "iPad") if dev == "ipad" else UA, has_touch=True, is_mobile=(bn == "chromium"), service_workers="block")
       c.add_init_script("window.__sc=[];window.OE_SHORTCUT_HOOK=function(u){window.__sc.push(u)};window.__open=[];window.open=function(u){window.__open.push(u);return {}};localStorage.setItem('oe_tip_hide',String(Date.now()+9e9));")
       c.route("**/onderhoud-api.sealink68.workers.dev/**", api)
       c.route("**/werkrapport-translate.sealink68.workers.dev/**", lambda r: r.fulfill(status=500, headers=H, body="x"))

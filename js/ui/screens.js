@@ -33,9 +33,9 @@
       '<label class="lbl" for="lnm">' + x.last + '</label><input id="lnm" autocomplete="family-name" autocapitalize="words" placeholder="' + esc(x.lastPh) + '">' +
       '<p class="hint">' + x.initials + ': <b id="ini"></b></p><div id="err"></div>' +
       instButtons(x) +
+      '<p class="note">' + esc(OE.devText(OE.T.nl.techFolder)) + "<br>" + esc(OE.devText(OE.T.fr.techFolder)) + "</p>" +
       '<div class="btns">' + (first ? "" : '<button class="btn sec" id="bk">‹ ' + x.back + "</button>") +
-      '<button class="btn pri" id="go">' + (first ? x.techStart : x.techSave) + "</button></div>" +
-      (first ? '<p class="note">' + esc(OE.devText(x.techNote)) + "</p>" : '<button class="small" id="setup">' + esc(x.techStart) + "</button>");
+      '<button class="btn pri" id="go">' + (first ? x.techStart : x.techSave) + "</button></div>";
     var fn = $("fn"), ln = $("lnm");
     fn.value = S.tech.first; ln.value = S.tech.last;
     function upd() { $("ini").textContent = OE.initials(fn.value, ln.value) || "–"; }
@@ -45,8 +45,7 @@
       S.tech = { first: fn.value.trim(), last: ln.value.trim() }; OE.save(); return true;
     }
     OE.bind("bk", function () { OE.go("mode", -1); });
-    OE.bind("go", function () { if (!store()) return; if (first) OE.runShortcut("setup"); OE.go("mode"); });
-    OE.bind("setup", function () { if (!store()) return; OE.runShortcut("setup"); });
+    OE.bind("go", function () { if (!store()) return; OE.go("mode"); });
   };
 
   /* ---------- 3. 1 or more devices ---------- */

@@ -47,7 +47,7 @@ def proxy(route):  # werkrapport-translate (Gemini via Worker) mock
 def mymemory(route): route.fulfill(status=500, headers=H, body="down")
 
 def ctx(b, vw, vh, dpr=3):
-  c = b.new_context(viewport={"width": vw, "height": vh}, device_scale_factor=dpr, has_touch=True, is_mobile=True,
+  c = b.new_context(viewport={"width": vw, "height": vh}, device_scale_factor=dpr, has_touch=True, is_mobile=True, service_workers="block",
                     user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1")
   c.add_init_script("window.OE_SHORTCUT_HOOK=function(u){(window.__sc=window.__sc||[]).push(u)}; localStorage.setItem('oe_tip_hide',String(Date.now()+9e9));")
   c.route("**/onderhoud-api.sealink68.workers.dev/**", api)
@@ -94,7 +94,7 @@ with sync_playwright() as p:
   # ================= iPhone 13 portrait (390x844) =================
   c = ctx(b, 390, 844); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
   start(pg, state("nl"))
-  chk(pg.evaluate("OE.deviceKind()") == "iphone" and pg.evaluate("OE.shortcutInstall()") == "https://www.icloud.com/shortcuts/6996453996e64d18818c3d3bda1a5fab", "iPhone Shortcut install link (OC_Iphone)")
+  chk(pg.evaluate("OE.deviceKind()") == "iphone" and pg.evaluate("OE.shortcutInstall()") == "https://www.icloud.com/shortcuts/d979d5b6e6074467875a5a8a695190be", "iPhone Shortcut install link (OC_Iphone)")
   chk(pg.get_attribute("#cam", "capture") == "environment" and pg.get_attribute("#lib", "multiple") is not None, "camera + library inputs unchanged")
   pg.tap("#help"); pg.wait_for_selector("#hlp"); t = pg.inner_text("#hlp"); pg.tap("#hlpx")
   chk("tekenscherm" in t and "maatlijn" in t and "Korte beschrijving" not in t and "optioneel, max. 150 tekens" in t, "help (NL) explains drawing tools + description")

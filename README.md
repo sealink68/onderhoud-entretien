@@ -8,23 +8,19 @@ Zuster-app van [Werkrapport](https://sealink68.github.io/werkrapport/), met deze
 
 | Toestel | Naam opdracht | Installatielink | Bewaart in |
 |---|---|---|---|
-| iPhone | `OC_Iphone` | https://www.icloud.com/shortcuts/6996453996e64d18818c3d3bda1a5fab | **Op mijn iPhone › Rapport › Onderhoud_Entretien** |
-| iPad | `OC_Ipad` | https://www.icloud.com/shortcuts/05201aff0eb94a7088bff5e1c2c75edc | **Op mijn iPad › Rapport › Onderhoud_Entretien** |
+| iPhone | `OC_Iphone` | https://www.icloud.com/shortcuts/d979d5b6e6074467875a5a8a695190be | **Op mijn iPhone › Rapport** |
+| iPad | `OC_Ipad` | https://www.icloud.com/shortcuts/fa8c5eb7f1834e118e63b74bcfefefa8 | **Op mijn iPad › Rapport** |
 
-De opdrachten bewaren de PDF **lokaal op het toestel** en niet meer in iCloud Drive, omdat ServiceMax Go op beheerde toestellen iCloud Drive niet ziet. Bij `setup` maken ze ook de map **Rapport › Depannage** aan (voor een latere uitbreiding van Werkrapport). Na het bewaren opent de opdracht ServiceMax Go. In ServiceMax voeg je de PDF toe via **Blader › Locaties › Op mijn iPhone/iPad › Rapport › Onderhoud_Entretien**. Tip: markeer die map één keer als favoriet in **Bestanden** (vinger op de map houden › *Voeg toe aan favorieten*).
+Eén map **Rapport** op het toestel, voor Onderhoud en Werkrapport. De opdracht maakt geen mappen meer aan: **Bewaar bestand** heeft **Vraag waar te bewaren** aan. De eerste keer kies je **Op mijn iPhone/iPad › Rapport**; daarna onthoudt ze die plek meestal. In ServiceMax: **Blader › Locaties › Op mijn iPhone/iPad › Rapport**.
 
 **Toestelherkenning** (`OE.deviceKind()` in `js/platform.js`): iPad = `iPad` in de user agent, óf een Mac-UA/`navigator.platform === "MacIntel"` met `navigator.maxTouchPoints > 1` (iPadOS-Safari doet zich als Mac voor); iPhone = `iPhone`/`iPod` in de UA. Andere toestellen (desktop, Android) gebruiken de iPhone-opdracht om te starten; het techniekerscherm toont daar beide installatieknoppen (iPhone en iPad).
-
-**Wie al een oudere opdracht heeft** (`Onderhoud_Entretien`, bewaarde in iCloud Drive): installeer één keer de nieuwe opdracht via *1. Installeer de opdracht*, tik daarna op *Start* (⚙ Instellingen technieker › *2. Start*) om de mappen aan te maken. De oude opdracht `Onderhoud_Entretien` mag je verwijderen.
-
-Zegt iOS bij *2. Start* **Bestand bestaat niet**? Dat is geen fout van de website (de installatielinks antwoorden 200 en de app maakt zelf geen mappen). De acties *Maak map aan* en *Bewaar bestand* in `OC_Iphone` / `OC_Ipad` wijzen naar een absoluut pad van het toestel waarop de opdracht gebouwd is. Kies op dit toestel die locatie opnieuw: **Op mijn iPhone** of **Op mijn iPad**. Zie `SHORTCUT.md`.
 
 **Backend:** Cloudflare Worker `onderhoud-api` → https://onderhoud-api.sealink68.workers.dev (bron in `../onderhoud-api/`)
 
 ## Verloop
 
 1. Taalkeuze NL / FR.
-2. Eenmalig: voornaam + achternaam van de technieker. Stap *1. Installeer de opdracht* opent de installatielink van de opdracht voor dit toestel (iPhone of iPad), stap *2. Start* bewaart de naam. De initialen worden daaruit afgeleid. *Start* bewaart je naam en start de iOS-opdracht met `setup` om de mappen aan te maken. Aanpassen kan later via **⚙ Instellingen technieker**.
+2. Eenmalig: voornaam + achternaam van de technieker. *1. Installeer de opdracht* opent de installatielink voor dit toestel. Maak zelf één map **Rapport** in Bestanden › Op mijn iPhone/iPad. *Start* bewaart alleen je naam (geen `setup`-opdracht meer). Aanpassen kan later via **⚙ Instellingen technieker**.
 3. Keuze: 1 toestel of meerdere toestellen. Beide keuzes volgen hetzelfde verloop; de keuze wordt alleen bewaard.
 4. Werkorder: kies een bestaande WO (lijst van de worker) of maak een nieuwe aan (prefix `WO-` wordt afgedwongen). Vul daarna het dossiernummer in. Bovenaan het startscherm en op dit scherm staat **Screenshot ServiceMax inlezen** / **Lire capture ServiceMax**: één of meer schermafbeeldingen worden op het toestel gelezen (Tesseract.js, `nld+fra+eng`, niets wordt opgeladen). Na **Overnemen / Reprendre** komt het geïnstalleerd product in het dossiernummer (nooit het WO-nummer; leeg als er geen product is). WO, account, adres, contact en product staan in het blok **Klantgegevens / Données client** van het verslag en de PDF. Onderwerp / Objet wordt niet overgenomen.
 5. Acht stellingen, elk standaard **Juist**. Kies je **Niet juist**, dan verschijnt de juiste invulling: een beschrijving, een vaste tekst of *revisit*. Bij stelling 1 is minstens één foto verplicht. Na elke foto (camera of bibliotheek) opent meteen een tekeneditor op volledig scherm (pijl, cirkel/ellips, rechthoek, vrij tekenen, maatlijn met label, tekst; 5 kleuren, 3 diktes, ongedaan maken, alles wissen, Annuleren/Klaar), daarna een optionele korte beschrijving (max. 150 tekens). Alleen de bewerkte versie wordt bewaard (max. 2000 px lange zijde, JPEG ±0.85) met de naam `<WO>_<dossier>_<n>.jpg`; de beschrijving staat in het dossier (`answers[i].photoDesc`) en komt, automatisch vertaald, onder de foto in de PDF. De revisit-zin staat maar één keer per dossier in het verslag.

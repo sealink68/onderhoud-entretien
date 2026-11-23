@@ -8,8 +8,8 @@ from playwright.sync_api import sync_playwright
 U = "http://localhost:8817/index.html"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SH = os.path.join(ROOT, "screens_device") + "/"; os.makedirs(SH, exist_ok=True)
-L_IPHONE = "https://www.icloud.com/shortcuts/6996453996e64d18818c3d3bda1a5fab"
-L_IPAD = "https://www.icloud.com/shortcuts/05201aff0eb94a7088bff5e1c2c75edc"
+L_IPHONE = "https://www.icloud.com/shortcuts/d979d5b6e6074467875a5a8a695190be"
+L_IPAD = "https://www.icloud.com/shortcuts/fa8c5eb7f1834e118e63b74bcfefefa8"
 OLD = ["ae5ae596" + "ed7d4671870b9b685ba90f43", "527981a4" + "9cbd4cb09a70e05ca6661274"]  # split so this file doesn't contain them
 WO = "WO-TESTDEV 1/ä&x"  # needs URL-encoding
 ok = True
@@ -50,7 +50,7 @@ with sync_playwright() as p:
   b = p.chromium.launch()
   for name, (ua, (w, h), plat, mtp, kind) in DEV.items():
     touch = mtp > 0
-    c = b.new_context(viewport={"width": w, "height": h}, device_scale_factor=2, has_touch=touch, is_mobile=touch and kind != "other" or name == "android", user_agent=ua)
+    c = b.new_context(viewport={"width": w, "height": h}, device_scale_factor=2, has_touch=touch, is_mobile=touch and kind != "other" or name == "android", user_agent=ua, service_workers="block")
     c.add_init_script("Object.defineProperty(Navigator.prototype,'platform',{get:()=>%s});Object.defineProperty(Navigator.prototype,'maxTouchPoints',{get:()=>%d});"
                       "window.OE_SHORTCUT_HOOK=function(u){(window.__sc=window.__sc||[]).push(u)};localStorage.setItem('oe_tip_hide',String(Date.now()+9e9));" % (json.dumps(plat), mtp))
     c.route("**/onderhoud-api.sealink68.workers.dev/**", api); c.route("**/werkrapport-translate.sealink68.workers.dev/**", down); c.route("**/api.mymemory.translated.net/**", down)
@@ -59,7 +59,8 @@ with sync_playwright() as p:
     sc, links, dev = EXP[kind]
     chk(pg.evaluate("OE.deviceKind()") == kind, f"{name}: deviceKind = {kind}")
     chk(pg.evaluate("OE.shortcutName()") == sc, f"{name}: shortcut name {sc}")
-    exp_url = "shortcuts://run-shortcut?name=" + sc + "&input=text&text=" + quote(WO, safe="")
+    # Slash and space are not safe in the Shortcut filename/URL; ä and & stay and must be encoded.
+    exp_url = "shortcuts://run-shortcut?name=" + sc + "&input=text&text=" + quote("WO-TESTDEV_1_ä&x", safe="")
     chk(pg.evaluate("w=>OE.shortcutUrl(w)", WO) == exp_url, f"{name}: run URL URL-encoded ({exp_url})")
     for lang in ("nl", "fr"):
       pg.evaluate("s=>{localStorage.setItem('oe_state_v1',JSON.stringify(s))}", state(lang, "tech", tech=False)); pg.reload(); pg.wait_for_selector("#fn")
@@ -69,21 +70,21 @@ with sync_playwright() as p:
       if kind == "other": chk("iPhone" in lab[0] and "iPad" in lab[1], f"{name}/{lang}: both buttons labelled {lab}")
       note = pg.inner_text(".note")
       loc = ("Op mijn " if lang == "nl" else "Sur mon ") + dev
-      scn = "OC_Iphone / OC_Ipad" if kind == "other" else sc
-      chk(loc in note and ("‘" + scn + "’" in note or "« " + scn + " »" in note) and ("‘Onderhoud_Entretien’" in note or "« Onderhoud_Entretien »" in note), f"{name}/{lang}: tech note mentions {loc}, new name, old shortcut")
+      chk(loc in note and "Rapport" in note and "Nieuwe map" in note and "Nouveau dossier" in note, f"{name}/{lang}: bilingual Rapport instruction ({note[:80]})")
       if lang == "nl" and name in ("iphone13", "ipad_mac", "win_desktop"): pg.wait_for_timeout(200); pg.screenshot(path=SH + f"tech-{name}.png")
       pg.tap("#help") if touch else pg.click("#help"); pg.wait_for_selector("#hlp"); t = pg.inner_text("#hlp")
       chk(loc in t and "iCloud" not in t and ("verwijderen" in t if lang == "nl" else "supprimé" in t), f"{name}/{lang}: tech help uses {loc}, old shortcut may be deleted")
       if lang == "nl": pg.wait_for_timeout(150); pg.screenshot(path=SH + f"help-tech-{name}.png") if name in ("iphone13", "ipad_mac") else None
-      # run 2. Start -> setup with the right name
+      # Start only saves the name. The Rapport folder is made by hand; no text=setup call.
       pg.click("#hlpx"); pg.evaluate("window.__sc=[]"); pg.fill("#fn", "Joachim"); pg.fill("#lnm", "Lust"); pg.click("#go")
-      chk(pg.evaluate("window.__sc") == ["shortcuts://run-shortcut?name=" + sc + "&input=text&text=setup"], f"{name}/{lang}: 2. Start runs {sc} setup")
+      pg.wait_for_selector("#m1")
+      chk(pg.evaluate("window.__sc") == [], f"{name}/{lang}: Start does not run the shortcut")
       # final-screen help: location + ServiceMax path + favourites tip
       pg.evaluate("s=>{localStorage.setItem('oe_state_v1',JSON.stringify(s))}", state(lang, "final")); pg.reload(); pg.wait_for_selector("#help")
       pg.click("#help"); pg.wait_for_selector("#hlp"); t = pg.inner_text("#hlp")
-      if lang == "nl": good = "Op mijn %s › Rapport › Onderhoud_Entretien" % dev in t and "Blader › Locaties › Op mijn %s" % dev in t and "Voeg toe aan favorieten" in t
-      else: good = "Sur mon %s › Rapport › Onderhoud_Entretien" % dev in t and "Parcourir › Emplacements › Sur mon %s" % dev in t and "Ajouter aux favoris" in t
-      chk(good and "iCloud" not in t, f"{name}/{lang}: final help (location, ServiceMax path, favourites tip)")
+      if lang == "nl": good = "Op mijn %s › Rapport" % dev in t and "Blader › Locaties › Op mijn %s › Rapport" % dev in t and "Voeg toe aan favorieten" in t and "Selecteer › Verwijder" in t and "Onderhoud_Entretien" not in t
+      else: good = "Sur mon %s › Rapport" % dev in t and "Parcourir › Emplacements › Sur mon %s › Rapport" % dev in t and "Ajouter aux favoris" in t and "Sélectionner › Supprimer" in t and "Depannage" not in t
+      chk(good and "iCloud" not in t, f"{name}/{lang}: final help (Rapport only, favourites, delete old PDFs)")
       if lang == "nl" and name in ("iphone13", "ipad_mac"): pg.wait_for_timeout(150); pg.screenshot(path=SH + f"help-final-{name}.png")
       pg.click("#hlpx")
     chk(not errs, f"{name}: no JS errors {errs}")

@@ -28,7 +28,7 @@ with sync_playwright() as p:
   br = p.chromium.launch()
   for dev, (vp, ua) in VP.items():
     for lang in ("nl", "fr"):
-      c = br.new_context(viewport={"width": vp[0], "height": vp[1]}, user_agent=ua, is_mobile=True, has_touch=True)
+      c = br.new_context(viewport={"width": vp[0], "height": vp[1]}, user_agent=ua, is_mobile=True, has_touch=True, service_workers="block")
       c.add_init_script("localStorage.setItem('oe_tip_hide',String(Date.now()+9e9));window.OE_SHORTCUT_HOOK=function(){};window.open=function(){return null};")
       c.route("**/onderhoud-api*/**", api); c.route("**workers.dev/**", api)
       pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))

@@ -33,7 +33,7 @@ with sync_playwright() as p:
     br = getattr(p, bn).launch()
     for dev, vp in VP.items():
       lang = "nl" if dev != "iphone15" else "fr"; tag = f"{bn}_{dev}_{lang}"
-      c = br.new_context(viewport={"width": vp[0], "height": vp[1]}, user_agent=UA.replace("iPhone", "iPad") if dev == "ipad" else UA, has_touch=True, is_mobile=(bn == "chromium"))
+      c = br.new_context(viewport={"width": vp[0], "height": vp[1]}, user_agent=UA.replace("iPhone", "iPad") if dev == "ipad" else UA, has_touch=True, is_mobile=(bn == "chromium"), service_workers="block")
       c.add_init_script("window.__sc=[];window.OE_SHORTCUT_HOOK=function(u){window.__sc.push(u)};window.open=function(){return null};"
                         "window.__ov=0;setInterval(function(){var d=document.documentElement;if(d.scrollWidth>innerWidth+1||scrollX!==0)window.__ov++},10);")
       c.route("**workers.dev/**", api)
